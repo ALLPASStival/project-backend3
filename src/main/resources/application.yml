@@ -1,0 +1,22 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      force-response: true
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USER_NAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database: mysql
+    hibernate.ddl-auto: update
+jwt:
+  token:
+    secret: ${TOKEN_SECRET}
