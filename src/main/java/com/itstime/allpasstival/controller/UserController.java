@@ -12,12 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("api/v1/users")
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
     private final UserRepository userRepository;
-    private final UserService userService;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserInfoResponse> userInfo(@PathVariable Integer id){
@@ -30,10 +29,5 @@ public class UserController {
         return ResponseEntity.ok().body(userInfoResponse);
     }
 
-    @PostMapping(value = "/register")
-    public Response<UserJoinResponse> register(@RequestBody UserJoinRequest userJoinRequest){
-        UserDto userDto = userService.register(userJoinRequest);
-        return Response.success(new UserJoinResponse(userDto.getEmail(), userDto.getNickname()));
-    }
 
 }

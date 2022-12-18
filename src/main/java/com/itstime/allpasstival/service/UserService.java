@@ -2,7 +2,7 @@ package com.itstime.allpasstival.service;
 
 
 import com.itstime.allpasstival.domain.dto.UserDto;
-import com.itstime.allpasstival.domain.dto.UserJoinRequest;
+import com.itstime.allpasstival.domain.dto.JoinRequest;
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.exception.AllPasstivalAppException;
 import com.itstime.allpasstival.exception.ErrorCode;
@@ -30,7 +30,7 @@ public class UserService {
 
     }
 
-    public UserDto register(UserJoinRequest request){
+    public UserDto register(JoinRequest request){
         this.checkEmailExist(request.getEmail());
         this.checkNicknameExist(request.getNickname());
 
