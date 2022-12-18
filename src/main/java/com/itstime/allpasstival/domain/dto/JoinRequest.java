@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class UserJoinRequest {
+public class JoinRequest {
     private String email;
     private String password;
     private String nickname;
