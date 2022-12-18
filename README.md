@@ -26,5 +26,15 @@
    * localhost:8080/users/register
    * 비밀번호는 hash후 저장함
    * 이메일과 닉네임을 중복확인한 후 없을때만 회원가입하는 로직으로 작성함
-   * 추후 auth api로 분리 필요
-   * 파일명, 변수 명 등 통일 필요(register/join)
+   * 추후 auth api로 분리 필요 -> week2에서 수정함
+   * 파일명, 변수 명 등 통일 필요(register/join) -> week2에서 수정함
+
+### week2
+1. #### 회원가입 api 수정
+   * 파일명, 변수 명 등 통일
+   * endpoint 수정 (api/v1/auth/register)
+   
+2. #### 테스트를 위한 서버 배포
+   * jar 파일을 통한 배포
+   * 추후 도커로 빌드하는것으로 수정할 예정
+   * 서버 램 2GB로 늘림 (스왑 파일 이용)
