@@ -7,7 +7,9 @@ import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.exception.AllPasstivalAppException;
 import com.itstime.allpasstival.exception.ErrorCode;
 import com.itstime.allpasstival.repository.UserRepository;
+import com.itstime.allpasstival.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,10 @@ public class UserService {
     private final BCryptPasswordEncoder encoder;
 
 
+    @Value("${jwt.token.secret}")
+    private
+    String secretKey;
+    private long expireTimeMs = 1000 * 60 * 60;
 
     public void checkEmailExist(String email){
         userRepository.findByEmail(email)
@@ -40,6 +46,21 @@ public class UserService {
                 .email(savedUser.getEmail())
                 .nickname(savedUser.getNickname())
                 .build();
+    }
+
+    public String login(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.NOT_FOUND, ErrorCode.NOT_FOUND.getMessage()));
+        if(!encoder.matches(password,user.getPassword())){
+            throw new AllPasstivalAppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
+        }
+
+        return JwtTokenUtil.createToken(user.getUserId(), secretKey, expireTimeMs);
+    }
+
+    public User getUserByUserId(Integer userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(()->new AllPasstivalAppException(ErrorCode.NOT_FOUND,ErrorCode.NOT_FOUND.getMessage()));
     }
 
 }

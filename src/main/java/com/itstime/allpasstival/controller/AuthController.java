@@ -1,9 +1,6 @@
 package com.itstime.allpasstival.controller;
 
-import com.itstime.allpasstival.domain.dto.JoinRequest;
-import com.itstime.allpasstival.domain.dto.JoinResponse;
-import com.itstime.allpasstival.domain.dto.Response;
-import com.itstime.allpasstival.domain.dto.UserDto;
+import com.itstime.allpasstival.domain.dto.*;
 import com.itstime.allpasstival.repository.UserRepository;
 import com.itstime.allpasstival.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +20,11 @@ public class AuthController {
     public Response<JoinResponse> register(@RequestBody JoinRequest joinRequest){
         UserDto userDto = userService.register(joinRequest);
         return Response.success(new JoinResponse(userDto.getEmail(), userDto.getNickname()));
+    }
+
+    @PostMapping("/login")
+    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest){
+        String token = userService.login(userLoginRequest.getEmail(),userLoginRequest.getPassword());
+        return Response.success(new UserLoginResponse(token));
     }
 }

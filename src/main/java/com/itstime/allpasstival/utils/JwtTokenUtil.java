@@ -12,17 +12,17 @@ public class JwtTokenUtil {
         return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
     }
 
-    public static String getUserName(String token, String key){
-        return extractClaims(token,key).get("userName").toString();
+    public static Integer getUserId(String token, String key){
+        return (int)extractClaims(token,key).get("userId");
     }
 
     public static boolean isExpired(String token, String secretKey){
         Date expiredDate = extractClaims(token, secretKey).getExpiration();
         return expiredDate.before(new Date());
     }
-    public static String createToken(String userName, String key, long expireTimeMs) {
+    public static String createToken(Integer userId, String key, long expireTimeMs) {
         Claims claims = Jwts.claims(); // 일종의 map
-        claims.put("userName", userName);
+        claims.put("userId", userId);
 
         return Jwts.builder()
                 .setClaims(claims)
