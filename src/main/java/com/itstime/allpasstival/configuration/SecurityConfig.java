@@ -42,6 +42,9 @@ public class SecurityConfig {
                 .antMatchers(SWAGGER).permitAll()
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/api/v1/auth/register", "/api/v1/auth/login").permitAll() // join, login은 언제나 가능
+                .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
+                .antMatchers(HttpMethod.PUT, "/api/v1/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // jwt사용하는 경우 씀
