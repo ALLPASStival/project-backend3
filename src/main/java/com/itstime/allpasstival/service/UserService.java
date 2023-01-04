@@ -3,11 +3,13 @@ package com.itstime.allpasstival.service;
 
 import com.itstime.allpasstival.domain.dto.UserDto;
 import com.itstime.allpasstival.domain.dto.JoinRequest;
+import com.itstime.allpasstival.domain.dto.UserInfoResponse;
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.exception.AllPasstivalAppException;
 import com.itstime.allpasstival.exception.ErrorCode;
 import com.itstime.allpasstival.repository.UserRepository;
 import com.itstime.allpasstival.utils.JwtTokenUtil;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -61,6 +63,16 @@ public class UserService {
     public User getUserByUserId(Integer userId) {
         return userRepository.findById(userId)
                 .orElseThrow(()->new AllPasstivalAppException(ErrorCode.NOT_FOUND,ErrorCode.NOT_FOUND.getMessage()));
+    }
+
+    public UserInfoResponse getUser(String userId){
+        User user = userRepository.findById(Integer.parseInt(userId))
+                .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.NOT_FOUND, ErrorCode.NOT_FOUND.getMessage()));
+        return UserInfoResponse.builder()
+                .email(user.getEmail())
+                .profilePicUrl(user.getProfilePicUrl())
+                .nickname(user.getNickname())
+                .build();
     }
 
 }
