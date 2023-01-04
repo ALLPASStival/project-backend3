@@ -14,7 +14,7 @@ public class UserDto {
     private String email;
     private String nickname;
     private String password;
-    private String profilPicUrl;
+    private String profilePicUrl;
     private boolean isAdmin;
     private String refreshToken;
 
