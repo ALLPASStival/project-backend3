@@ -22,9 +22,15 @@ public class UserController {
 
     @GetMapping(value = "")
     public Response<UserInfoResponse> userInfo(Authentication authentication){
-        System.out.println(authentication.getName());
         UserInfoResponse userInfoResponse = userService.getUser(authentication.getName());
         return Response.success(userInfoResponse);
+    }
+
+    @PatchMapping("")
+    public Response<UserUpdateResponse> updateUser(@RequestBody UserUpdateRequest userUpdateRequest, Authentication authentication){
+        UserUpdateResponse userUpdateResponse = userService.updateUser(userUpdateRequest, authentication.getName());
+        return Response.success(userUpdateResponse);
+
     }
 
 
