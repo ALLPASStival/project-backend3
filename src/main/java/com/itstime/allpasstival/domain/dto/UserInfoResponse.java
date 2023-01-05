@@ -10,6 +10,6 @@ import lombok.*;
 public class UserInfoResponse {
     private String email;
     private String nickname;
-    private String profilPicUrl;
+    private String profilePicUrl;
 
 }

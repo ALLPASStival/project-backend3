@@ -1,8 +1,7 @@
 package com.itstime.allpasstival.service;
 
 
-import com.itstime.allpasstival.domain.dto.UserDto;
-import com.itstime.allpasstival.domain.dto.JoinRequest;
+import com.itstime.allpasstival.domain.dto.*;
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.exception.AllPasstivalAppException;
 import com.itstime.allpasstival.exception.ErrorCode;
@@ -63,4 +62,32 @@ public class UserService {
                 .orElseThrow(()->new AllPasstivalAppException(ErrorCode.NOT_FOUND,ErrorCode.NOT_FOUND.getMessage()));
     }
 
+    public UserInfoResponse getUser(String userId){
+        User user = userRepository.findById(Integer.parseInt(userId))
+                .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.NOT_FOUND, ErrorCode.NOT_FOUND.getMessage()));
+        return UserInfoResponse.builder()
+                .email(user.getEmail())
+                .profilePicUrl(user.getProfilePicUrl())
+                .nickname(user.getNickname())
+                .build();
+    }
+
+    public UserUpdateResponse updateUser(UserUpdateRequest request, String userId) {
+        User beforeUser = userRepository.findById(Integer.parseInt(userId))
+                .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.NOT_FOUND, ErrorCode.NOT_FOUND.getMessage()));
+        User updatedUser = User.builder()
+                .UserId(beforeUser.getUserId())
+                .profilePicUrl(request.getProfilePicUrl()==null? beforeUser.getProfilePicUrl() : request.getProfilePicUrl())
+                .nickname(request.getNickname()==null? beforeUser.getNickname() : request.getNickname())
+                .password(request.getPassword()==null? beforeUser.getPassword() : encoder.encode(request.getPassword()))
+                .email(beforeUser.getEmail())
+                .isAdmin(beforeUser.isAdmin())
+                .build();
+        userRepository.save(updatedUser);
+        return UserUpdateResponse.builder()
+                .email(updatedUser.getEmail())
+                .profilePicUrl(updatedUser.getProfilePicUrl())
+                .nickname(updatedUser.getNickname())
+                .build();
+    }
 }
