@@ -24,15 +24,20 @@ public class UserService {
     String secretKey;
     private long expireTimeMs = 1000 * 60 * 60;
 
-    public void checkEmailExist(String email){
+    public UserEmailExistResponse checkEmailExist(String email){
         userRepository.findByEmail(email)
-                .ifPresent((user)->{ throw new AllPasstivalAppException(ErrorCode.DUPLICATED_USER_EMAIL,String.format("email <%s> is exist",email ));});
+                .ifPresent((user)->{ throw new AllPasstivalAppException(ErrorCode.DUPLICATED_USER_EMAIL, ErrorCode.DUPLICATED_USER_EMAIL.getMessage());});
+        return UserEmailExistResponse.builder()
+                .isExist(false)
+                .build();
     }
 
-    public void checkNicknameExist(String nickname){
+    public UserNicknameExistResponse checkNicknameExist(String nickname){
         userRepository.findByNickname(nickname)
-                .ifPresent((user)->{ throw new AllPasstivalAppException(ErrorCode.DUPLICATED_USER_NICKNAME,String.format("nickname <%s> is exist", nickname ));});
-
+                .ifPresent((user)->{ throw new AllPasstivalAppException(ErrorCode.DUPLICATED_USER_NICKNAME,ErrorCode.DUPLICATED_USER_NICKNAME.getMessage());});
+        return UserNicknameExistResponse.builder()
+                .isExist(false)
+                .build();
     }
 
     public UserDto register(JoinRequest request){

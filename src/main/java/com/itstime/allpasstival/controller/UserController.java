@@ -33,5 +33,18 @@ public class UserController {
 
     }
 
+    @GetMapping(value = "/email-exists/{email}")
+    public Response<UserEmailExistResponse> isEmailExist(@PathVariable String email){
+        UserEmailExistResponse userEmailExistResponse = userService.checkEmailExist(email);
+        return Response.success(userEmailExistResponse);
+    }
+
+    @GetMapping(value = "/nickname-exists/{nickname}")
+    public Response<UserNicknameExistResponse> isNicknameExist(@PathVariable String nickname){
+        UserNicknameExistResponse userNicknameExistResponse = userService.checkNicknameExist(nickname);
+        return Response.success(userNicknameExistResponse);
+    }
+
+
 
 }
