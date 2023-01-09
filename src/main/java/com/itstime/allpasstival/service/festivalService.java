@@ -2,10 +2,11 @@ package com.itstime.allpasstival.service;
 
 
 import com.itstime.allpasstival.domain.dto.festivalSaveRequestDto;
+import com.itstime.allpasstival.domain.dto.festivalUpdateRequestDto;
 import com.itstime.allpasstival.domain.entity.festival;
 import com.itstime.allpasstival.repository.festivalRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,40 +16,46 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class festivalService {
 
+    @Autowired
     private static final festivalRepository fesposRepository = null;
 
-    @Transactional
-    public int update(int festivalID, festivalSaveRequestDto requestDto){
-        festivalRepository.findById(festivalID);
 
-        festivalRepository.update(requestDto.getFestival_name(), requestDto.getHolding_venue(), requestDto.getStart_date(), requestDto.getFinish_date(), requestDto.getHost_inst(), requestDto.getHost_org(), requestDto.getTel_num(), requestDto.getHomep_addr(), requestDto.getStreet_addr(), requestDto.getView(), requestDto.getEtc());
-        return festivalID;
+
+
+    //리스트 조회
+    public static Page<festival> fesList(Pageable pageable){
+
+        return fesposRepository.findAll(pageable);
     }
 
-    public festivalSaveRequestDto findById(int festivalID){
-        festivalRepository.findById(festivalID);
+    public static festivalUpdateRequestDto findByid(Integer id) {
+        return festivalUpdateRequestDto.builder().build();
+    }
+
+
+    //글 작성
+    public String write(festival festivals) {
+        fesposRepository.save(festivals);
         return null;
     }
 
-    //리스트 조회
-    public static Page<festival> festivalList(Pageable pageable){
-        return fesposRepository.findAll(pageable);
 
+    //리스트에서 게시글 클릭해서 보는거. 게시글의 id를 받아와서 반환
+    public static festival viewDetail(Integer id){
+
+        return fesposRepository.findById(id).get();
+    }
+
+    //검색기능
+    public Page<festival> festivalSearch(String keyWord, Pageable pageable){
+        return fesposRepository.findByKeyWordContaining(keyWord,pageable);
     }
 
 
+    //게시글 삭제하는거
+    //게시글 아이디 받아서 삭제
+    public void Delete(Integer id){
 
-    public festivalSaveRequestDto save(festivalSaveRequestDto requestDto) {
-        return festivalSaveRequestDto.builder().festival_name().etc().finish_date().start_date().holding_venue();
+        fesposRepository.deleteById((id));
     }
-
-
-    //검색
-    public Page<festival> searchFestival(String seach)
-
-
-
-
-
-
 }

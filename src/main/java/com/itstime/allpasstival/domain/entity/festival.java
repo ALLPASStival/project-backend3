@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class festival {
     @Id//프라임키.축제 id,VARCHAR
     @GeneratedValue(strategy = GenerationType.IDENTITY)//프라임키 생성 규칙. 이걸 추가하면 자동생성된대요
-    private int festivalID;
+    private int festival_iD;
 
     @Column(length = 500)
     private String festival_name;//축제이름VARCHAR
@@ -63,7 +63,4 @@ public class festival {
         this.etc = etc;
     }
 
-    public festival orElseThrow(Object o) {
-        return null;
-    }
 }

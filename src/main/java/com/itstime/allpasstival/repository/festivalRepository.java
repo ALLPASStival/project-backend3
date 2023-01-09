@@ -3,6 +3,7 @@ package com.itstime.allpasstival.repository;
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.domain.entity.festival;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,11 +16,11 @@ public interface festivalRepository extends JpaRepository<festival,Integer>{
         return null;
     }
 
-    static Optional<festival> findById(int festivalID) {
+    static Optional<festival>  findByid(int festivalID) {
         return null;
     }
 
-
-    Page<festival> findByTitle(String Search);
+    //검색기능 시작
+    Page<festival> findByKeyWordContaining(String Search, Pageable pageable);
 
 }
