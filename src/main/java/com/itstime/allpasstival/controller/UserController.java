@@ -7,8 +7,10 @@ import com.itstime.allpasstival.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.Authenticator;
 import java.util.Optional;
 
 @RestController
@@ -16,17 +18,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<UserInfoResponse> userInfo(@PathVariable Integer id){
-        Optional<User> optionalUser = userRepository.findById(id);
-        UserInfoResponse userInfoResponse = UserInfoResponse.builder()
-                .email(optionalUser.get().getEmail())
-                .nickname(optionalUser.get().getNickname())
-                .profilPicUrl(optionalUser.get().getProfilPicUrl())
-                .build();
-        return ResponseEntity.ok().body(userInfoResponse);
+    @GetMapping(value = "")
+    public Response<UserInfoResponse> userInfo(Authentication authentication){
+        UserInfoResponse userInfoResponse = userService.getUser(authentication.getName());
+        return Response.success(userInfoResponse);
+    }
+
+    @PatchMapping("")
+    public Response<UserUpdateResponse> updateUser(@RequestBody UserUpdateRequest userUpdateRequest, Authentication authentication){
+        UserUpdateResponse userUpdateResponse = userService.updateUser(userUpdateRequest, authentication.getName());
+        return Response.success(userUpdateResponse);
+
     }
 
 

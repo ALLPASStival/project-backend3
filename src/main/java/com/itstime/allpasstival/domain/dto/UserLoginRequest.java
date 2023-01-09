@@ -6,16 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
-public class UserDto {
-    private Integer userId;
+public class UserLoginRequest {
     private String email;
-    private String nickname;
     private String password;
-    private String profilePicUrl;
-    private boolean isAdmin;
-    private String refreshToken;
-
 }

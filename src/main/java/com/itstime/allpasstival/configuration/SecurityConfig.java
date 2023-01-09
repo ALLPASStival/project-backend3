@@ -17,7 +17,27 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    @Value("${jwt.token.secret}")
+    private String secretKey;
+
+    private final UserService userService;
+
+    private String[] SWAGGER = {
+            /* swagger v2 */
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            /* swagger v3 */
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -25,13 +45,21 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
+                .antMatchers(SWAGGER).permitAll()
                 .antMatchers("/api/**").permitAll()
-                .antMatchers("/api/users/register", "/api/users/{id}").permitAll() // join, login은 언제나 가능
+                .antMatchers("/api/v1/auth/register", "/api/v1/auth/login").permitAll() // join, login은 언제나 가능
+                .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
+                .antMatchers(HttpMethod.PUT, "/api/v1/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/v1/**").authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // jwt사용하는 경우 씀
                 .and()
-                //.addFilterBefore(new JwtTokenFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class) //UserNamePasswordAuthenticationFilter적용하기 전에 JWTTokenFilter를 적용 하라는 뜻
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .and()
+                .addFilterBefore(new JwtTokenFilter(secretKey,userService), UsernamePasswordAuthenticationFilter.class) //UserNamePasswordAuthenticationFilter적용하기 전에 JWTTokenFilter를 적용 하라는 뜻
                 .build();
     }
 }
