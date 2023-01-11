@@ -19,7 +19,8 @@ public interface FestivalRepository extends JpaRepository<Festival,Integer>{
         return null;
     }
 
-    //검색기능 시작
-    Page<Festival> findByKeyWordContaining(String Search, Pageable pageable);
 
+    //검색기능 시작
+    /*Page<Festival> findByKeyWordContaining(String Search, Pageable pageable);
+*/
 }

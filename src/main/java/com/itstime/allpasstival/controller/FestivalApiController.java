@@ -23,7 +23,7 @@ public class FestivalApiController {
     private final FestivalService fesposService ;
 
 
-    //글 작성처리
+    /*//글 작성처리
     @PostMapping("/api/festivals")
     public Integer save(@RequestBody FestivalSaveRequestDto requestDto){
 
@@ -44,9 +44,9 @@ public class FestivalApiController {
 
         return "redirect:i/festivals/list";
     }
-
+*/
     //게시글 리스트
-    @GetMapping("/api/festivals/list")
+   /* @GetMapping("/api/festivals/list")
     public String festivalList(Model model,  @PageableDefault(page = 0,size = 10,sort = "id",direction = Sort.Direction.DESC)Pageable pageable, String keyWord){
 
 
@@ -69,7 +69,7 @@ public class FestivalApiController {
         model.addAttribute("start",start);
         model.addAttribute("End",End);
         return "List festival";
-    }
+    }*/
 
     //축제글 세부 조회.
     @GetMapping(value="/{id}")
@@ -78,11 +78,11 @@ public class FestivalApiController {
         return "viewDetails";
     }
 
-    //삭제기능
+   /* //삭제기능
     @GetMapping("/api/festivals/delete")
     public String Delete(Integer id){
         fesposService.Delete(id);
         //삭제 후 리스트로 다시 돌아감
         return "redirect:i/festivals/list";
-    }
+    }*/
 }

@@ -44,9 +44,9 @@ public class FestivalService {
     }
 
     //검색기능
-    public Page<Festival> festivalSearch(String keyWord, Pageable pageable){
-        return fesposRepository.findByKeyWordContaining(keyWord,pageable);
-    }
+    ///public Page<Festival> festivalSearch(String keyWord, Pageable pageable){
+       /// return fesposRepository.findByKeyWordContaining(keyWord,pageable);
+    ///}
 
 
     //게시글 삭제하는거
