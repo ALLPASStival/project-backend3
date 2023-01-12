@@ -88,6 +88,7 @@ public class UserService {
                 .password(request.getPassword()==null? beforeUser.getPassword() : encoder.encode(request.getPassword()))
                 .email(beforeUser.getEmail())
                 .posts(beforeUser.getPosts())
+                .reservedFestivals(beforeUser.getReservedFestivals())
                 .isAdmin(beforeUser.isAdmin())
                 .build();
         userRepository.save(updatedUser);

@@ -12,6 +12,7 @@ import com.itstime.allpasstival.repository.FestivalRepository;
 import com.itstime.allpasstival.repository.ReservedFestivalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -90,6 +91,12 @@ public class FestivalService {
         }
         reservedFestivalRepository.save(ReservedFestival.of(festival,user));
         return FestivalReserveResponse.of(festival,"찜을 추가했습니다.");
+    }
+    public Page<FestivalDetailResponseDto> getReservedFestival(Pageable pageable, String userId) {
+        User user = validateService.validateUser(userId);
+        Page<ReservedFestival> reservedFestivalPage = reservedFestivalRepository.findAllByUser(pageable, user);
+        Page<Festival> festivalPage = reservedFestivalPage.map(Festival::of);
+        return festivalPage.map(FestivalDetailResponseDto::of);
 
     }
 

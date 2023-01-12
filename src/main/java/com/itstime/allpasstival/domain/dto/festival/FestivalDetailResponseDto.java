@@ -1,6 +1,7 @@
 package com.itstime.allpasstival.domain.dto.festival;
 //게시글 응답 클래스
 
+import com.itstime.allpasstival.domain.entity.Festival;
 import lombok.*;
 
 @Getter
@@ -21,4 +22,20 @@ public class FestivalDetailResponseDto {
     private String etc;//비고TEXT
     private String author;//작성자
 
+    public static FestivalDetailResponseDto of(Festival festival) {
+        return FestivalDetailResponseDto.builder().
+                holdingVenue(festival.getHoldingVenue()).
+                hostInst(festival.getHostInst()).
+                telNum(festival.getTelNum()).
+                festivalName(festival.getFestivalName()).
+                hostOrg(festival.getHostOrg()).
+                etc(festival.getEtc()).
+                view(festival.getView()).
+                finishDate(festival.getFinishDate()).
+                startDate(festival.getStartDate()).
+                homepAddr(festival.getHomepAddr()).
+                streetAddr(festival.getStreetAddr()).
+                author(festival.getAuthor()).
+                build();
+    }
 }

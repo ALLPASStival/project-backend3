@@ -31,5 +31,9 @@ public class Festival {
     private String etc;//비고TEXT
     private String author;
 
+    public static Festival of(ReservedFestival reservedFestival) {
+        return reservedFestival.getFestival();
+    }
+
 
 }
