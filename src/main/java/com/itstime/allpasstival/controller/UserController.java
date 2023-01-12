@@ -68,5 +68,12 @@ public class UserController {
         Page<FestivalDetailResponse> festivalDetailResponseDto = festivalService.getReservedFestival(pageable ,authentication.getName());
         return Response.success(festivalDetailResponseDto);
     }
+    @GetMapping ("/my-recently-viewed-festivals")
+    public Response<Page<FestivalDetailResponse>> getMyRecentlyViewedFestival(@PageableDefault(size = 12, sort ="createdAt",
+            direction = Sort.Direction.DESC)Pageable pageable, Authentication authentication){
+        Page<FestivalDetailResponse> festivalDetailResponseDto = festivalService.getRecentlyViewedFestival(pageable ,authentication.getName());
+        return Response.success(festivalDetailResponseDto);
+    }
+
 
 }

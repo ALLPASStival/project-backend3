@@ -119,4 +119,11 @@ public class FestivalService {
         }
         recentlyViewedFestivalRepository.save(RecentlyViewedFestival.of(festival,user));
     }
+
+    public Page<FestivalDetailResponse> getRecentlyViewedFestival(Pageable pageable, String userId) {
+        User user = validateService.validateUser(userId);
+        Page<RecentlyViewedFestival> recentlyViewedFestivalPage = recentlyViewedFestivalRepository.findAllByUser(pageable, user);
+        Page<Festival> festivalPage = recentlyViewedFestivalPage.map(Festival::of);
+        return festivalPage.map(FestivalDetailResponse::of);
+    }
 }

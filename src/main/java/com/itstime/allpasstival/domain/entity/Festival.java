@@ -34,6 +34,9 @@ public class Festival {
     public static Festival of(ReservedFestival reservedFestival) {
         return reservedFestival.getFestival();
     }
+    public static Festival of(RecentlyViewedFestival recentlyViewedFestival) {
+        return recentlyViewedFestival.getFestival();
+    }
 
 
 }
