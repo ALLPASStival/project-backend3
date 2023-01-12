@@ -86,4 +86,5 @@ public class FestivalApiController {
         //삭제 후 리스트로 다시 돌아감
         return "redirect:i/festivals/list";
     }*/
+
 }

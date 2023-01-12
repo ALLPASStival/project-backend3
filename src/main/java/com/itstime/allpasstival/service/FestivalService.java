@@ -67,4 +67,5 @@ public class FestivalService {
 
         fesposRepository.deleteById((id));
     }
+
 }
