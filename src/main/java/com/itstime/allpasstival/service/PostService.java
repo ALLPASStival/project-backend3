@@ -9,6 +9,8 @@ import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.enums.PostCategory;
 import com.itstime.allpasstival.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -60,10 +62,10 @@ public class PostService {
 //    }
 //
 //
-//    public Page<PostInfoResponse> getMyPosts(Pageable pageable, String userId) {
-//        User user = validateService.validateUser(userId);
-//        Page<Post> postPages = postRepository.findAllByUser_UserId(pageable, Integer.parseInt(userId));
-//        Page<PostInfoResponse> postInfoResponses = postPages.map(PostInfoResponse::of);
-//        return postInfoResponses;
-//    }
+    public Page<PostInfoResponse> getMyPosts(Pageable pageable, String userId) {
+        User user = validateService.validateUser(userId);
+        Page<Post> postPages = postRepository.findAllByUser(pageable, user);
+        Page<PostInfoResponse> postInfoResponses = postPages.map(PostInfoResponse::of);
+        return postInfoResponses;
+    }
 }

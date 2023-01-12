@@ -6,6 +6,10 @@ import com.itstime.allpasstival.domain.dto.post.PostInfoResponse;
 import com.itstime.allpasstival.domain.dto.Response;
 import com.itstime.allpasstival.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,5 +29,12 @@ public class PostController {
     public Response<PostEnrollResponse> writePost(@PathVariable String category, @RequestBody PostEnrollRequest postEnrollRequest, Authentication authentication){
         PostEnrollResponse postEnrollResponse = postService.enrollPost(postEnrollRequest,category,authentication.getName());
         return Response.success(postEnrollResponse);
+    }
+
+    @GetMapping ("/my-posts")
+    public Response<Page<PostInfoResponse>> getMyPosts(@PageableDefault(size = 20, sort ="createdAt",
+            direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+        Page<PostInfoResponse> posts = postService.getMyPosts(pageable, authentication.getName());
+        return Response.success(posts);
     }
 }
