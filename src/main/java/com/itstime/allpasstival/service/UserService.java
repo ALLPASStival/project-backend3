@@ -89,6 +89,7 @@ public class UserService {
                 .email(beforeUser.getEmail())
                 .posts(beforeUser.getPosts())
                 .reservedFestivals(beforeUser.getReservedFestivals())
+                .recentlyViewedFestivals(beforeUser.getRecentlyViewedFestivals())
                 .isAdmin(beforeUser.isAdmin())
                 .build();
         userRepository.save(updatedUser);
