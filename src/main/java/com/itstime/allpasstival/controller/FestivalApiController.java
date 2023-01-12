@@ -1,8 +1,5 @@
 package com.itstime.allpasstival.controller;
 
-import com.itstime.allpasstival.domain.dto.FestivalDetailResponseDto;
-import com.itstime.allpasstival.domain.dto.FestivalSaveRequestDto;
-import com.itstime.allpasstival.domain.dto.FestivalUpdateRequestDto;
 import com.itstime.allpasstival.domain.entity.Festival;
 import com.itstime.allpasstival.service.FestivalService;
 import lombok.RequiredArgsConstructor;

@@ -2,6 +2,9 @@ package com.itstime.allpasstival.service;
 
 
 import com.itstime.allpasstival.domain.dto.*;
+import com.itstime.allpasstival.domain.dto.festival.FestivalDetailResponseDto;
+import com.itstime.allpasstival.domain.dto.festival.FestivalSaveRequestDto;
+import com.itstime.allpasstival.domain.dto.festival.FestivalUpdateRequestDto;
 import com.itstime.allpasstival.domain.entity.Festival;
 import com.itstime.allpasstival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +35,7 @@ public class FestivalService {
 
     //글 작성
     public Integer save(FestivalSaveRequestDto requestDto) {
-        return fesposRepository.save(requestDto.toEntity()).getFestivalID();
+        return fesposRepository.save(requestDto.toEntity()).getFestivalId();
     }
 
 

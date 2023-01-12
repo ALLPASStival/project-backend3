@@ -1,7 +1,8 @@
 package com.itstime.allpasstival.service;
 
 
-import com.itstime.allpasstival.domain.dto.*;
+import com.itstime.allpasstival.domain.dto.auth.JoinRequest;
+import com.itstime.allpasstival.domain.dto.user.*;
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.exception.AllPasstivalAppException;
 import com.itstime.allpasstival.exception.ErrorCode;

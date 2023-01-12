@@ -1,18 +1,16 @@
 package com.itstime.allpasstival.service;
 
-import com.itstime.allpasstival.domain.dto.*;
+import com.itstime.allpasstival.domain.dto.post.PostEnrollRequest;
+import com.itstime.allpasstival.domain.dto.post.PostEnrollResponse;
+import com.itstime.allpasstival.domain.dto.post.PostInfoResponse;
 import com.itstime.allpasstival.domain.entity.Festival;
 import com.itstime.allpasstival.domain.entity.Post;
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.enums.PostCategory;
 import com.itstime.allpasstival.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -20,7 +18,7 @@ public class PostService {
     private final ValidateService validateService;
 
     public PostInfoResponse getPost(Integer id){
-        Post post = validateService.validatePost(id);
+       Post post = validateService.validatePost(id);
         return PostInfoResponse.of(post);
     }
 //
@@ -42,7 +40,7 @@ public class PostService {
         Festival festival = validateService.validateFestival(request.getFestivalId());
         PostCategory postCategory =  validateService.validatePostCategory(category);
         Post savedPost = postRepository.save(request.toEntity(user,festival,postCategory));
-        return new PostEnrollResponse().of(savedPost);
+        return PostEnrollResponse.of(savedPost);
     }
 //
 //    public PostModifyResponse modifyPost(Integer id, PostModifyRequest request, String userId){
