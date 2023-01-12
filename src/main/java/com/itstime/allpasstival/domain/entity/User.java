@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,5 +24,8 @@ public class User extends BaseEntity{
     private String profilePicUrl;
     private boolean isAdmin;
     private String refreshToken;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<Post> posts = new ArrayList<>();
 
 }
