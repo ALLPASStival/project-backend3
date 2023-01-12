@@ -1,4 +1,4 @@
-package com.itstime.allpasstival.domain.dto;
+package com.itstime.allpasstival.domain.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class JoinResponse {
-    private String email;
-    private String nickname;
-
+public class UserLoginResponse {
+    private String jwt;
 }

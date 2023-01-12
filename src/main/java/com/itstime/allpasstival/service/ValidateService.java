@@ -20,19 +20,25 @@ public class ValidateService {
 
     private final FestivalRepository festivalRepository;
 
+    //유저 정보 유무 확인
     public User validateUser(String userId){
         return userRepository.findById(Integer.parseInt(userId))
                 .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
     }
+
+    //게시글 정보 유무 확인
     public Post validatePost(Integer postId){
         return  postRepository.findById(postId)
                 .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
     }
+
+    //축제 정보 유무 확인
     public Festival validateFestival(Integer festivalId){
         return festivalRepository.findById(festivalId)
-                .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+                .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.FESTIVAL_NOT_FOUND, ErrorCode.FESTIVAL_NOT_FOUND.getMessage()));
     }
 
+    //게시글 카테고리 유무 확인
     public PostCategory validatePostCategory(String postCategory){
         for(PostCategory category : PostCategory.values()){
             if(category.getCategory().equals(postCategory)){
@@ -42,6 +48,7 @@ public class ValidateService {
         throw new AllPasstivalAppException(ErrorCode.CATEGORY_NOT_FOUND, ErrorCode.CATEGORY_NOT_FOUND.getMessage());
     }
 
+    //권한 조회
     public void validatePermission(User author, User currentUser){
         if(!(currentUser.getUserId()==author.getUserId()||currentUser.isAdmin())){
             throw new AllPasstivalAppException(ErrorCode.INVALID_PERMISSION,ErrorCode.INVALID_PASSWORD.getMessage());

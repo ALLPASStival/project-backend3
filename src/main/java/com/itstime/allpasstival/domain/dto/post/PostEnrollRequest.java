@@ -1,4 +1,4 @@
-package com.itstime.allpasstival.domain.dto;
+package com.itstime.allpasstival.domain.dto.post;
 
 import com.itstime.allpasstival.domain.entity.Festival;
 import com.itstime.allpasstival.domain.entity.Post;

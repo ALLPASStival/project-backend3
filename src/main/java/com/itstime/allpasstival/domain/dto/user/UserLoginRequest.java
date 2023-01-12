@@ -1,4 +1,4 @@
-package com.itstime.allpasstival.domain.dto;
+package com.itstime.allpasstival.domain.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

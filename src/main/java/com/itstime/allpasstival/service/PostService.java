@@ -1,6 +1,8 @@
 package com.itstime.allpasstival.service;
 
-import com.itstime.allpasstival.domain.dto.*;
+import com.itstime.allpasstival.domain.dto.post.PostEnrollRequest;
+import com.itstime.allpasstival.domain.dto.post.PostEnrollResponse;
+import com.itstime.allpasstival.domain.dto.post.PostInfoResponse;
 import com.itstime.allpasstival.domain.entity.Festival;
 import com.itstime.allpasstival.domain.entity.Post;
 import com.itstime.allpasstival.domain.entity.User;
@@ -11,16 +13,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
     private final ValidateService validateService;
 
+    //게시글 단건조회
     public PostInfoResponse getPost(Integer id){
-        Post post = validateService.validatePost(id);
+       Post post = validateService.validatePost(id);
         return PostInfoResponse.of(post);
     }
 //
@@ -37,12 +38,13 @@ public class PostService {
 //        return postInfoResponses;
 //    }
 //
+    //게시글 등록
     public PostEnrollResponse enrollPost(PostEnrollRequest request, String category, String userId){
         User user = validateService.validateUser(userId);
         Festival festival = validateService.validateFestival(request.getFestivalId());
         PostCategory postCategory =  validateService.validatePostCategory(category);
         Post savedPost = postRepository.save(request.toEntity(user,festival,postCategory));
-        return new PostEnrollResponse().of(savedPost);
+        return PostEnrollResponse.of(savedPost);
     }
 //
 //    public PostModifyResponse modifyPost(Integer id, PostModifyRequest request, String userId){
@@ -62,10 +64,11 @@ public class PostService {
 //    }
 //
 //
-//    public Page<PostInfoResponse> getMyPosts(Pageable pageable, String userId) {
-//        User user = validateService.validateUser(userId);
-//        Page<Post> postPages = postRepository.findAllByUser_UserId(pageable, Integer.parseInt(userId));
-//        Page<PostInfoResponse> postInfoResponses = postPages.map(PostInfoResponse::of);
-//        return postInfoResponses;
-//    }
+    //내 게시글 모아보기
+    public Page<PostInfoResponse> getMyPosts(Pageable pageable, String userId) {
+        User user = validateService.validateUser(userId);
+        Page<Post> postPages = postRepository.findAllByUser(pageable, user);
+        Page<PostInfoResponse> postInfoResponses = postPages.map(PostInfoResponse::of);
+        return postInfoResponses;
+    }
 }

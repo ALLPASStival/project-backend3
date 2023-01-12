@@ -1,16 +1,14 @@
-package com.itstime.allpasstival.domain.dto;
+package com.itstime.allpasstival.domain.dto.festival;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-
-public class FestivalUpdateRequestDto {
+@AllArgsConstructor//모든 필드 값을 받는 생성자
+@NoArgsConstructor//파라미터 없는 기본 생성자
+@Getter//접근자
+public class FestivalSaveResponseDto {
+    private Integer festivalID;
     private String festivalName;//축제이름VARCHAR
     private String holdingVenue;//개최장소VARCHAR
     private String startDate;//시작일시DATE

@@ -1,4 +1,4 @@
-package com.itstime.allpasstival.domain.dto;
+package com.itstime.allpasstival.domain.dto.festival;
 
 import com.itstime.allpasstival.domain.entity.Festival;
 import lombok.AllArgsConstructor;

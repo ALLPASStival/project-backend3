@@ -1,4 +1,4 @@
-package com.itstime.allpasstival.domain.dto;
+package com.itstime.allpasstival.domain.dto.post;
 
 import com.itstime.allpasstival.domain.entity.Post;
 import lombok.AllArgsConstructor;
@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class PostEnrollResponse {
-    private String message = "포스트 등록 완료";
+    private String message;
     private Integer postId;
-    public PostEnrollResponse of(Post post) {
+    public static PostEnrollResponse of(Post post) {
         return PostEnrollResponse.builder()
                 .postId(post.getPostId())
-                .message(this.message)
+                .message("포스트 등록 완료")
                 .build();
     }
 

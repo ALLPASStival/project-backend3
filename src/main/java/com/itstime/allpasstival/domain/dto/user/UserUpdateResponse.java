@@ -1,21 +1,16 @@
-package com.itstime.allpasstival.domain.dto;
+package com.itstime.allpasstival.domain.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-public class UserDto {
-    private Integer userId;
+public class UserUpdateResponse {
     private String email;
     private String nickname;
-    private String password;
     private String profilePicUrl;
-    private boolean isAdmin;
-    private String refreshToken;
-
 }

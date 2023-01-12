@@ -1,7 +1,11 @@
 package com.itstime.allpasstival.controller;
 
 import com.itstime.allpasstival.domain.dto.*;
-import com.itstime.allpasstival.repository.UserRepository;
+import com.itstime.allpasstival.domain.dto.auth.JoinRequest;
+import com.itstime.allpasstival.domain.dto.auth.JoinResponse;
+import com.itstime.allpasstival.domain.dto.user.UserDto;
+import com.itstime.allpasstival.domain.dto.user.UserLoginRequest;
+import com.itstime.allpasstival.domain.dto.user.UserLoginResponse;
 import com.itstime.allpasstival.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
