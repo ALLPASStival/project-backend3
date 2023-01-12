@@ -1,10 +1,18 @@
 package com.itstime.allpasstival.controller;
 
 import com.itstime.allpasstival.domain.dto.*;
+import com.itstime.allpasstival.domain.dto.festival.FestivalDetailResponseDto;
+import com.itstime.allpasstival.domain.dto.post.PostInfoResponse;
 import com.itstime.allpasstival.domain.dto.user.*;
+import com.itstime.allpasstival.service.FestivalService;
+import com.itstime.allpasstival.service.PostService;
 import com.itstime.allpasstival.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class UserController {
     private final UserService userService;
+    private final PostService postService;
+    private final FestivalService festivalService;
 
     @GetMapping(value = "")
     public Response<UserInfoResponse> userInfo(Authentication authentication){
@@ -46,13 +56,17 @@ public class UserController {
         return Response.success(userDeleteResponse);
     }
 
-//    @GetMapping ("/myposts")
-//    public Response<Page<PostInfoResponse>> getMyPosts(@PageableDefault(size = 20, sort ="createdAt",
-//            direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
-//        List<PostInfoResponse> posts = postService.getMyPosts(pageable, authentication.getName());
-//        return Response.success(new PageImpl<>(posts));
-//    }
-
-
+    @GetMapping ("/my-posts")
+    public Response<Page<PostInfoResponse>> getMyPosts(@PageableDefault(size = 20, sort ="createdAt",
+            direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+        Page<PostInfoResponse> posts = postService.getMyPosts(pageable, authentication.getName());
+        return Response.success(posts);
+    }
+    @GetMapping("/my-reserved-festivals")
+    public Response<Page<FestivalDetailResponseDto>> getMyReservedFestival(@PageableDefault(size = 20, sort ="createdAt",
+            direction = Sort.Direction.DESC)Pageable pageable, Authentication authentication){
+        Page<FestivalDetailResponseDto> festivalDetailResponseDto = festivalService.getReservedFestival(pageable ,authentication.getName());
+        return Response.success(festivalDetailResponseDto);
+    }
 
 }

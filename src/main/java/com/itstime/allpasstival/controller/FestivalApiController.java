@@ -91,11 +91,6 @@ public class FestivalApiController {
         return Response.success(festivalReserveResponse);
     }
 
-    @GetMapping("/my-reserved-festivals")
-    public Response<Page<FestivalDetailResponseDto>> getMyReservedFestival(@PageableDefault(size = 20, sort ="createdAt",
-            direction = Sort.Direction.DESC)Pageable pageable, Authentication authentication){
-        Page<FestivalDetailResponseDto> festivalDetailResponseDto = festivalService.getReservedFestival(pageable ,authentication.getName());
-        return Response.success(festivalDetailResponseDto);
-    }
+
 
 }

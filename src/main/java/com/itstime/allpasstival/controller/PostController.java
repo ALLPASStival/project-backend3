@@ -31,10 +31,5 @@ public class PostController {
         return Response.success(postEnrollResponse);
     }
 
-    @GetMapping ("/my-posts")
-    public Response<Page<PostInfoResponse>> getMyPosts(@PageableDefault(size = 20, sort ="createdAt",
-            direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
-        Page<PostInfoResponse> posts = postService.getMyPosts(pageable, authentication.getName());
-        return Response.success(posts);
-    }
+
 }
