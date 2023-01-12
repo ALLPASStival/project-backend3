@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()
-                .antMatchers(HttpMethod.GET, "/api/v1/**").authenticated()
+//                .antMatchers(HttpMethod.GET, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.PATCH, "/api/v1/**").authenticated()
                 .and()
                 .sessionManagement()
