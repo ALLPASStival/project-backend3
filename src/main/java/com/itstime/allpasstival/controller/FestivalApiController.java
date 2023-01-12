@@ -68,9 +68,10 @@ public class FestivalApiController {
 
     //축제글 세부 조회.
     @GetMapping(value="/{id}")
-    public String viewDetails(Model model, Integer id){
-        model.addAttribute("festivalPostView",festivalService.viewDetail(id));
-        return "viewDetails";
+    public Response<FestivalDetailResponse> viewDetails(@PathVariable Integer id, Authentication authentication){
+        FestivalDetailResponse festivalDetailResponse = festivalService.viewDetail(id);
+        festivalService.updateRecentlyViewedFestival(id, authentication);
+        return Response.success(festivalDetailResponse);
     }
 
    /* //삭제기능
