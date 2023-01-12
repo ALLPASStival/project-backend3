@@ -40,6 +40,12 @@ public class UserController {
         return Response.success(userNicknameExistResponse);
     }
 
+    @DeleteMapping(value = "")
+    public Response<UserDeleteResponse> deleteUser(Authentication authentication){
+        UserDeleteResponse userDeleteResponse = userService.deleteUser(authentication.getName());
+        return Response.success(userDeleteResponse);
+    }
+
 //    @GetMapping ("/myposts")
 //    public Response<Page<PostInfoResponse>> getMyPosts(@PageableDefault(size = 20, sort ="createdAt",
 //            direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {

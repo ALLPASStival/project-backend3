@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
+    private final ValidateService validateService;
 
 
     @Value("${jwt.token.secret}")
@@ -86,6 +87,7 @@ public class UserService {
                 .nickname(request.getNickname()==null? beforeUser.getNickname() : request.getNickname())
                 .password(request.getPassword()==null? beforeUser.getPassword() : encoder.encode(request.getPassword()))
                 .email(beforeUser.getEmail())
+                .posts(beforeUser.getPosts())
                 .isAdmin(beforeUser.isAdmin())
                 .build();
         userRepository.save(updatedUser);
@@ -94,5 +96,11 @@ public class UserService {
                 .profilePicUrl(updatedUser.getProfilePicUrl())
                 .nickname(updatedUser.getNickname())
                 .build();
+    }
+
+    public UserDeleteResponse deleteUser(String userId){
+        User user = validateService.validateUser(userId);
+        userRepository.deleteById(user.getUserId());
+        return UserDeleteResponse.of(user);
     }
 }
