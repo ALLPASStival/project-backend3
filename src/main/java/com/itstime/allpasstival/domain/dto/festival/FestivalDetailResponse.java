@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FestivalDetailResponseDto {
+public class FestivalDetailResponse {
     private String festivalName;//축제이름VARCHAR
     private String holdingVenue;//개최장소VARCHAR
     private String startDate;//시작일시DATE
@@ -22,8 +22,8 @@ public class FestivalDetailResponseDto {
     private String etc;//비고TEXT
     private String author;//작성자
 
-    public static FestivalDetailResponseDto of(Festival festival) {
-        return FestivalDetailResponseDto.builder().
+    public static FestivalDetailResponse of(Festival festival) {
+        return FestivalDetailResponse.builder().
                 holdingVenue(festival.getHoldingVenue()).
                 hostInst(festival.getHostInst()).
                 telNum(festival.getTelNum()).

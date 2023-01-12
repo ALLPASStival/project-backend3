@@ -1,7 +1,7 @@
 package com.itstime.allpasstival.controller;
 
 import com.itstime.allpasstival.domain.dto.*;
-import com.itstime.allpasstival.domain.dto.festival.FestivalDetailResponseDto;
+import com.itstime.allpasstival.domain.dto.festival.FestivalDetailResponse;
 import com.itstime.allpasstival.domain.dto.post.PostInfoResponse;
 import com.itstime.allpasstival.domain.dto.user.*;
 import com.itstime.allpasstival.service.FestivalService;
@@ -63,9 +63,9 @@ public class UserController {
         return Response.success(posts);
     }
     @GetMapping("/my-reserved-festivals")
-    public Response<Page<FestivalDetailResponseDto>> getMyReservedFestival(@PageableDefault(size = 20, sort ="createdAt",
+    public Response<Page<FestivalDetailResponse>> getMyReservedFestival(@PageableDefault(size = 20, sort ="createdAt",
             direction = Sort.Direction.DESC)Pageable pageable, Authentication authentication){
-        Page<FestivalDetailResponseDto> festivalDetailResponseDto = festivalService.getReservedFestival(pageable ,authentication.getName());
+        Page<FestivalDetailResponse> festivalDetailResponseDto = festivalService.getReservedFestival(pageable ,authentication.getName());
         return Response.success(festivalDetailResponseDto);
     }
 
