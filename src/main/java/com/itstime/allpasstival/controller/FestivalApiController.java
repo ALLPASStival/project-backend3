@@ -1,16 +1,13 @@
 package com.itstime.allpasstival.controller;
 
-import com.itstime.allpasstival.domain.entity.Festival;
+import com.itstime.allpasstival.domain.dto.Response;
+import com.itstime.allpasstival.domain.dto.festival.FestivalReserveResponse;
 import com.itstime.allpasstival.service.FestivalService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("api/v1/festivals")
@@ -18,14 +15,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class FestivalApiController {
 
-    private final FestivalService fesposService ;
+    private final FestivalService festivalService ;
 
 
     /*//글 작성처리
     @PostMapping("/api/festivals")
     public Integer save(@RequestBody FestivalSaveRequestDto requestDto){
 
-        return fesposService.save(requestDto);
+        return festivalService.save(requestDto);
     }
 
     //게시글 수정기능
@@ -51,11 +48,11 @@ public class FestivalApiController {
         Page<Festival> list = null;
         if(keyWord == null){
             //검색키워드가 안들어오면
-            list = fesposService.fesList(pageable);
+            list = festivalService.fesList(pageable);
         }
         else{
             //들어오면
-            list = fesposService.festivalSearch(keyWord, pageable);
+            list = festivalService.festivalSearch(keyWord, pageable);
         }
 
 
@@ -72,16 +69,22 @@ public class FestivalApiController {
     //축제글 세부 조회.
     @GetMapping(value="/{id}")
     public String viewDetails(Model model, Integer id){
-        model.addAttribute("festivalPostView",fesposService.viewDetail(id));
+        model.addAttribute("festivalPostView",festivalService.viewDetail(id));
         return "viewDetails";
     }
 
    /* //삭제기능
     @GetMapping("/api/festivals/delete")
     public String Delete(Integer id){
-        fesposService.Delete(id);
+        festivalService.Delete(id);
         //삭제 후 리스트로 다시 돌아감
         return "redirect:i/festivals/list";
     }*/
+    @PostMapping("/{id}/reserves")
+    public Response<FestivalReserveResponse> reserveFestival(@PathVariable Integer id, Authentication authentication){
+        FestivalReserveResponse festivalReserveResponse = festivalService.updateReservedFestival(id, authentication.getName());
+        return Response.success(festivalReserveResponse);
+    }
+
 
 }
