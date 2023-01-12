@@ -30,7 +30,7 @@ public class ValidateService {
     }
     public Festival validateFestival(Integer festivalId){
         return festivalRepository.findById(festivalId)
-                .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+                .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.FESTIVAL_NOT_FOUND, ErrorCode.FESTIVAL_NOT_FOUND.getMessage()));
     }
 
     public PostCategory validatePostCategory(String postCategory){
