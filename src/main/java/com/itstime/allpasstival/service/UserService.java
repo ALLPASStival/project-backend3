@@ -41,6 +41,7 @@ public class UserService {
                 .build();
     }
 
+    //회원가입
     public UserDto register(JoinRequest request){
         this.checkEmailExist(request.getEmail());
         this.checkNicknameExist(request.getNickname());
@@ -53,6 +54,7 @@ public class UserService {
                 .build();
     }
 
+    //로그인
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.NOT_FOUND, ErrorCode.NOT_FOUND.getMessage()));
@@ -63,11 +65,13 @@ public class UserService {
         return JwtTokenUtil.createToken(user.getUserId(), secretKey, expireTimeMs);
     }
 
+    //유저id로 유저 정보 조회
     public User getUserByUserId(Integer userId) {
         return userRepository.findById(userId)
                 .orElseThrow(()->new AllPasstivalAppException(ErrorCode.NOT_FOUND,ErrorCode.NOT_FOUND.getMessage()));
     }
 
+    //유저 정보 조회
     public UserInfoResponse getUser(String userId){
         User user = userRepository.findById(Integer.parseInt(userId))
                 .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.NOT_FOUND, ErrorCode.NOT_FOUND.getMessage()));
@@ -78,6 +82,7 @@ public class UserService {
                 .build();
     }
 
+    //유저 정보 수정
     public UserUpdateResponse updateUser(UserUpdateRequest request, String userId) {
         User beforeUser = userRepository.findById(Integer.parseInt(userId))
                 .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.NOT_FOUND, ErrorCode.NOT_FOUND.getMessage()));
@@ -100,6 +105,7 @@ public class UserService {
                 .build();
     }
 
+    //유저 탈퇴
     public UserDeleteResponse deleteUser(String userId){
         User user = validateService.validateUser(userId);
         userRepository.deleteById(user.getUserId());

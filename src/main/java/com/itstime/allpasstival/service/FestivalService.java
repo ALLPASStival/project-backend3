@@ -84,6 +84,7 @@ public class FestivalService {
         festivalRepository.deleteById((id));
     }
 
+    //찜한 축제 수정
     public FestivalReserveResponse updateReservedFestival(Integer festivalId, String userId){
         User user = validateService.validateUser(userId);
         Festival festival = validateService.validateFestival(festivalId);
@@ -96,6 +97,8 @@ public class FestivalService {
         reservedFestivalRepository.save(ReservedFestival.of(festival,user));
         return FestivalReserveResponse.of(festival,"찜을 추가했습니다.");
     }
+
+    //찜한 축제 리스트 보기(페이징)
     public Page<FestivalDetailResponse> getReservedFestival(Pageable pageable, String userId) {
         User user = validateService.validateUser(userId);
         Page<ReservedFestival> reservedFestivalPage = reservedFestivalRepository.findAllByUser(pageable, user);
@@ -104,6 +107,7 @@ public class FestivalService {
 
     }
 
+    //최근 조회한 페스티벌 정보 수정
     public void updateRecentlyViewedFestival(Integer festivalId, Authentication authentication) {
         if(authentication==null){
             return;
@@ -120,6 +124,7 @@ public class FestivalService {
         recentlyViewedFestivalRepository.save(RecentlyViewedFestival.of(festival,user));
     }
 
+    //최근 조회한 페스티벌 정보 리스트 보기(페이징)
     public Page<FestivalDetailResponse> getRecentlyViewedFestival(Pageable pageable, String userId) {
         User user = validateService.validateUser(userId);
         Page<RecentlyViewedFestival> recentlyViewedFestivalPage = recentlyViewedFestivalRepository.findAllByUser(pageable, user);

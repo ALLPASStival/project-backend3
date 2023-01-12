@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
     private final PostService postService;
 
+    //게시글 상세 조회
     @GetMapping ("/{id}")
     public Response<PostInfoResponse> getPost(@PathVariable Integer id){
         PostInfoResponse postInfoResponse = postService.getPost(id);
         return Response.success(postInfoResponse);
     }
 
+    //게시글 등록
     @PostMapping("/{category}")
     public Response<PostEnrollResponse> writePost(@PathVariable String category, @RequestBody PostEnrollRequest postEnrollRequest, Authentication authentication){
         PostEnrollResponse postEnrollResponse = postService.enrollPost(postEnrollRequest,category,authentication.getName());

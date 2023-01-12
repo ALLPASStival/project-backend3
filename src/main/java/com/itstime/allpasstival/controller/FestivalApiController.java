@@ -81,6 +81,8 @@ public class FestivalApiController {
         //삭제 후 리스트로 다시 돌아감
         return "redirect:i/festivals/list";
     }*/
+
+    //찜한 축제 수정
     @PostMapping("/{id}/reserves")
     public Response<FestivalReserveResponse> reserveFestival(@PathVariable Integer id, Authentication authentication){
         FestivalReserveResponse festivalReserveResponse = festivalService.updateReservedFestival(id, authentication.getName());

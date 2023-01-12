@@ -19,6 +19,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final ValidateService validateService;
 
+    //게시글 단건조회
     public PostInfoResponse getPost(Integer id){
        Post post = validateService.validatePost(id);
         return PostInfoResponse.of(post);
@@ -37,6 +38,7 @@ public class PostService {
 //        return postInfoResponses;
 //    }
 //
+    //게시글 등록
     public PostEnrollResponse enrollPost(PostEnrollRequest request, String category, String userId){
         User user = validateService.validateUser(userId);
         Festival festival = validateService.validateFestival(request.getFestivalId());
@@ -62,6 +64,7 @@ public class PostService {
 //    }
 //
 //
+    //내 게시글 모아보기
     public Page<PostInfoResponse> getMyPosts(Pageable pageable, String userId) {
         User user = validateService.validateUser(userId);
         Page<Post> postPages = postRepository.findAllByUser(pageable, user);
