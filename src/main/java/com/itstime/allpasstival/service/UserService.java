@@ -23,7 +23,6 @@ public class UserService {
     private
     String secretKey;
     private long expireTimeMs = 1000 * 60 * 60;
-
     public UserEmailExistResponse checkEmailExist(String email){
         userRepository.findByEmail(email)
                 .ifPresent((user)->{ throw new AllPasstivalAppException(ErrorCode.DUPLICATED_USER_EMAIL, ErrorCode.DUPLICATED_USER_EMAIL.getMessage());});
