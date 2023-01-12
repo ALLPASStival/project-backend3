@@ -1,8 +1,7 @@
 package com.itstime.allpasstival.service;
 
 
-import com.itstime.allpasstival.domain.dto.FestivalSaveRequestDto;
-import com.itstime.allpasstival.domain.dto.FestivalUpdateRequestDto;
+import com.itstime.allpasstival.domain.dto.*;
 import com.itstime.allpasstival.domain.entity.Festival;
 import com.itstime.allpasstival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class FestivalService {
 
-    private static final FestivalRepository fesposRepository = null;
+    private final FestivalRepository fesposRepository;
 
 
 
@@ -22,7 +21,7 @@ public class FestivalService {
     //리스트 조회
     public static Page<Festival> fesList(Pageable pageable){
 
-        return fesposRepository.findAll(pageable);
+        return null;
     }
 
     public static FestivalUpdateRequestDto findByid(Integer id) {
@@ -37,10 +36,23 @@ public class FestivalService {
     }
 
 
-    //리스트에서 게시글 클릭해서 보는거. 게시글의 id를 받아와서 반환
-    public static Festival viewDetail(Integer id){
-
-        return fesposRepository.findById(id).get();
+    //리스트에서 게시글 세부조회. 게시글의 id를 받아와서 반환
+    public FestivalDetailResponseDto viewDetail(Integer id){
+        Festival festival = fesposRepository.findById(id).get();
+        return FestivalDetailResponseDto.builder().
+                holdingVenue(festival.getHoldingVenue()).
+                hostInst(festival.getHostInst()).
+                telNum(festival.getTelNum()).
+                festivalName(festival.getFestivalName()).
+                hostOrg(festival.getHostOrg()).
+                etc(festival.getEtc()).
+                view(festival.getView()).
+                finishDate(festival.getFinishDate()).
+                startDate(festival.getStartDate()).
+                homepAddr(festival.getHomepAddr()).
+                streetAddr(festival.getStreetAddr()).
+                author(festival.getAuthor()).
+                build();
     }
 
     //검색기능

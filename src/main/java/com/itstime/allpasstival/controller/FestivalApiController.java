@@ -1,5 +1,6 @@
 package com.itstime.allpasstival.controller;
 
+import com.itstime.allpasstival.domain.dto.FestivalDetailResponseDto;
 import com.itstime.allpasstival.domain.dto.FestivalSaveRequestDto;
 import com.itstime.allpasstival.domain.dto.FestivalUpdateRequestDto;
 import com.itstime.allpasstival.domain.entity.Festival;
@@ -74,7 +75,7 @@ public class FestivalApiController {
     //축제글 세부 조회.
     @GetMapping(value="/{id}")
     public String viewDetails(Model model, Integer id){
-        model.addAttribute("festival", FestivalService.viewDetail(id));
+        model.addAttribute("festivalPostView",fesposService.viewDetail(id));
         return "viewDetails";
     }
 
