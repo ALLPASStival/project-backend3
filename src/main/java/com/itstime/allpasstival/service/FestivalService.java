@@ -6,13 +6,16 @@ import com.itstime.allpasstival.domain.dto.festival.FestivalReserveResponse;
 import com.itstime.allpasstival.domain.dto.festival.FestivalSaveRequestDto;
 import com.itstime.allpasstival.domain.dto.festival.FestivalUpdateRequestDto;
 import com.itstime.allpasstival.domain.entity.Festival;
+import com.itstime.allpasstival.domain.entity.RecentlyViewedFestival;
 import com.itstime.allpasstival.domain.entity.ReservedFestival;
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.repository.FestivalRepository;
+import com.itstime.allpasstival.repository.RecentlyViewedFestivalRepository;
 import com.itstime.allpasstival.repository.ReservedFestivalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,6 +27,8 @@ public class FestivalService {
     private final FestivalRepository festivalRepository;
     private final ValidateService validateService;
     private final ReservedFestivalRepository reservedFestivalRepository;
+
+    private final RecentlyViewedFestivalRepository recentlyViewedFestivalRepository;
 
 
 
@@ -99,4 +104,19 @@ public class FestivalService {
 
     }
 
+    public void updateRecentlyViewedFestival(Integer festivalId, Authentication authentication) {
+        if(authentication==null){
+            return;
+        }
+        Festival festival = validateService.validateFestival(festivalId);
+        String userId = authentication.getName();
+        User user = validateService.validateUser(userId);
+        if(recentlyViewedFestivalRepository.findAllByUser(user).size()>=12){
+            recentlyViewedFestivalRepository.delete(recentlyViewedFestivalRepository.findByUserOrderByCreatedAtAsc(user));
+        }
+        if(recentlyViewedFestivalRepository.findByFestivalAndUser(festival,user).isPresent()){
+            return;
+        }
+        recentlyViewedFestivalRepository.save(RecentlyViewedFestival.of(festival,user));
+    }
 }
