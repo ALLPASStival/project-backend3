@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class Festival {
     @Id//프라임키.축제 id,VARCHAR
     @GeneratedValue(strategy = GenerationType.IDENTITY)//프라임키 생성 규칙. 이걸 추가하면 자동생성된대요
-    private Integer festivalID;
+    private Integer festivalId;
     private String festivalName;//축제이름VARCHAR
     private String holdingVenue;//개최장소VARCHAR
     private String startDate;//시작일시DATE
