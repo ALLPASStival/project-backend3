@@ -41,7 +41,7 @@ public class PostService {
     //게시글 등록
     public PostEnrollResponse enrollPost(PostEnrollRequest request, String category, String userId){
         User user = validateService.validateUser(userId);
-        Festival festival = validateService.validateFestival(request.getFestivalId());
+        Festival festival = category.equals("free") ? null : validateService.validateFestival(request.getFestivalId());
         PostCategory postCategory =  validateService.validatePostCategory(category);
         Post savedPost = postRepository.save(request.toEntity(user,festival,postCategory));
         return PostEnrollResponse.of(savedPost);
