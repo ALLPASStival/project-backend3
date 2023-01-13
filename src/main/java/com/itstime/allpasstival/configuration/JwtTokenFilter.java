@@ -2,6 +2,7 @@ package com.itstime.allpasstival.configuration;
 
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.exception.ErrorCode;
+import com.itstime.allpasstival.repository.UserRepository;
 import com.itstime.allpasstival.service.UserService;
 import com.itstime.allpasstival.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +20,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final String secretKey;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -57,11 +59,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request,response);
             return;
         }
+        Optional<User> user = userRepository.findById(userId);
 
-        User user = userService.getUserByUserId(userId);
-        log.info("is this user is admin: {}",user.isAdmin());
+        if(user.isEmpty()){
+            request.setAttribute("exception", ErrorCode.USERNAME_NOT_FOUND);
+            filterChain.doFilter(request,response);
+            return;
+        }
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserId(), null, List.of(new SimpleGrantedAuthority(user.getUserId().toString())));
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.get().getUserId(), null, List.of(new SimpleGrantedAuthority(user.get().getUserId().toString())));
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         request.setAttribute("exception", null);

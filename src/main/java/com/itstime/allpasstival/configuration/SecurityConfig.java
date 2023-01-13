@@ -1,6 +1,7 @@
 package com.itstime.allpasstival.configuration;
 
 
+import com.itstime.allpasstival.repository.UserRepository;
 import com.itstime.allpasstival.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +24,7 @@ public class SecurityConfig {
     @Value("${jwt.token.secret}")
     private String secretKey;
 
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     private String[] SWAGGER = {
             /* swagger v2 */
@@ -59,7 +60,7 @@ public class SecurityConfig {
                 .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
-                .addFilterBefore(new JwtTokenFilter(secretKey,userService), UsernamePasswordAuthenticationFilter.class) //UserNamePasswordAuthenticationFilter적용하기 전에 JWTTokenFilter를 적용 하라는 뜻
+                .addFilterBefore(new JwtTokenFilter(secretKey,userRepository), UsernamePasswordAuthenticationFilter.class) //UserNamePasswordAuthenticationFilter적용하기 전에 JWTTokenFilter를 적용 하라는 뜻
                 .build();
     }
 }
