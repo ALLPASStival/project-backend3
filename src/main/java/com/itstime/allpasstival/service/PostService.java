@@ -28,8 +28,7 @@ public class PostService {
 
     public Page<PostInfoResponse> getAllPosts(Pageable pageable){
         Page<Post> postPages = postRepository.findAll(pageable);
-        Page<PostInfoResponse> postInfoResponses = postPages.map(PostInfoResponse::of);
-        return postInfoResponses;
+        return postPages.map(PostInfoResponse::of);
     }
 
     //게시글 등록
@@ -41,6 +40,7 @@ public class PostService {
         return PostEnrollResponse.of(savedPost);
     }
 
+    //게시글 수정
     public PostModifyResponse modifyPost(Integer id, PostModifyRequest request, String userId){
         User user = validateService.validateUser(userId);
         Post post = validateService.validatePost(id);
@@ -49,21 +49,19 @@ public class PostService {
         return PostModifyResponse.of(modifiedPost);
     }
 
-//
-//    public PostDeleteResponse deletePost(Integer id, String userId){
-//        User user = validateService.validateUser(userId);
-//        Post post = validateService.validatePost(id);
-//        validateService.validatePermission(post.getUser(),user);
-//        postRepository.deleteById(id);
-//        return PostDeleteResponse.of(post);
-//    }
-//
-//
+    //게시글 삭제
+    public PostDeleteResponse deletePost(Integer id, String userId){
+        User user = validateService.validateUser(userId);
+        Post post = validateService.validatePost(id);
+        validateService.validatePermission(post.getUser(),user);
+        postRepository.deleteById(id);
+        return PostDeleteResponse.of(post);
+    }
+
     //내 게시글 모아보기
     public Page<PostInfoResponse> getMyPosts(Pageable pageable, String userId) {
         User user = validateService.validateUser(userId);
         Page<Post> postPages = postRepository.findAllByUser(pageable, user);
-        Page<PostInfoResponse> postInfoResponses = postPages.map(PostInfoResponse::of);
-        return postInfoResponses;
+        return postPages.map(PostInfoResponse::of);
     }
 }

@@ -50,5 +50,13 @@ public class PostController {
 
     }
 
+    //게시글 삭제
+    @DeleteMapping("/{id}")
+    public Response<PostDeleteResponse> deletePost(@PathVariable Integer id, Authentication authentication){
+        PostDeleteResponse postDeleteResponse = postService.deletePost(id,authentication.getName());
+        return Response.success(postDeleteResponse);
+
+    }
+
 
 }
