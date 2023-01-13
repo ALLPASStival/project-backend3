@@ -35,4 +35,7 @@ public class User extends BaseEntity{
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<RecentlyViewedFestival> recentlyViewedFestivals = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<LikedPost> likedPosts  = new ArrayList<>();
 }

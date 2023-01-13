@@ -2,6 +2,7 @@ package com.itstime.allpasstival.controller;
 
 import com.itstime.allpasstival.domain.dto.post.*;
 import com.itstime.allpasstival.domain.dto.Response;
+import com.itstime.allpasstival.service.LikedPostService;
 import com.itstime.allpasstival.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final LikedPostService likedPostService;
 
     //게시글 상세 조회
     @GetMapping ("/{id}")
@@ -56,6 +58,19 @@ public class PostController {
         PostDeleteResponse postDeleteResponse = postService.deletePost(id,authentication.getName());
         return Response.success(postDeleteResponse);
 
+    }
+
+    //좋아요 개수 확인
+    @GetMapping ("/{id}/likes")
+    public Response<Long> CountLike(@PathVariable Integer id) {
+        return Response.success(likedPostService.countLike(id));
+    }
+
+    //좋아요 누르기/취소하기
+    @PostMapping("/{id}/likes")
+    public Response<PostLikeUpdateResponse> AddLike(@PathVariable Integer id, Authentication authentication){
+        PostLikeUpdateResponse likeUpdateResponse = likedPostService.updateLike(id, authentication.getName());
+        return Response.success(likeUpdateResponse);
     }
 
 

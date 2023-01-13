@@ -98,6 +98,7 @@ public class UserService {
                 .email(beforeUser.getEmail())
                 .gender(request.getGender()==null?beforeUser.getGender():request.getGender())
                 .posts(beforeUser.getPosts())
+                .likedPosts(beforeUser.getLikedPosts())
                 .age(request.getAge()==null?beforeUser.getAge(): request.getAge())
                 .reservedFestivals(beforeUser.getReservedFestivals())
                 .recentlyViewedFestivals(beforeUser.getRecentlyViewedFestivals())

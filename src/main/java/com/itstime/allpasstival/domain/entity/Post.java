@@ -39,4 +39,7 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "festival_id")
     @JsonIgnore
     private Festival festival;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<LikedPost> likedPosts  = new ArrayList<>();
 }
