@@ -1,8 +1,6 @@
 package com.itstime.allpasstival.service;
 
-import com.itstime.allpasstival.domain.dto.post.PostEnrollRequest;
-import com.itstime.allpasstival.domain.dto.post.PostEnrollResponse;
-import com.itstime.allpasstival.domain.dto.post.PostInfoResponse;
+import com.itstime.allpasstival.domain.dto.post.*;
 import com.itstime.allpasstival.domain.entity.Festival;
 import com.itstime.allpasstival.domain.entity.Post;
 import com.itstime.allpasstival.domain.entity.User;
@@ -42,14 +40,15 @@ public class PostService {
         Post savedPost = postRepository.save(request.toEntity(user,festival,postCategory));
         return PostEnrollResponse.of(savedPost);
     }
-//
-//    public PostModifyResponse modifyPost(Integer id, PostModifyRequest request, String userId){
-//        User user = validateService.validateUser(userId);
-//        Post post = validateService.validatePost(id);
-//        validateService.validatePermission(post.getUser(),user);
-//        Post modifiedPost = postRepository.save(request.toEntity(user,post));
-//        return PostModifyResponse.of(modifiedPost);
-//    }
+
+    public PostModifyResponse modifyPost(Integer id, PostModifyRequest request, String userId){
+        User user = validateService.validateUser(userId);
+        Post post = validateService.validatePost(id);
+        validateService.validatePermission(post.getUser(),user);
+        Post modifiedPost = postRepository.save(request.toEntity(user,post));
+        return PostModifyResponse.of(modifiedPost);
+    }
+
 //
 //    public PostDeleteResponse deletePost(Integer id, String userId){
 //        User user = validateService.validateUser(userId);

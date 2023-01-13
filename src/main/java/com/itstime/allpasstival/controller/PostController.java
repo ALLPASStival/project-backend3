@@ -1,8 +1,6 @@
 package com.itstime.allpasstival.controller;
 
-import com.itstime.allpasstival.domain.dto.post.PostEnrollRequest;
-import com.itstime.allpasstival.domain.dto.post.PostEnrollResponse;
-import com.itstime.allpasstival.domain.dto.post.PostInfoResponse;
+import com.itstime.allpasstival.domain.dto.post.*;
 import com.itstime.allpasstival.domain.dto.Response;
 import com.itstime.allpasstival.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +40,14 @@ public class PostController {
             direction = Sort.Direction.DESC) Pageable pageable) {
         Page<PostInfoResponse> posts = postService.getAllPosts(pageable);
         return Response.success(posts);
+    }
+
+    //게시글 수정
+    @PutMapping("/{id}")
+    public Response<PostModifyResponse> modifyPost(@PathVariable Integer id, @RequestBody PostModifyRequest postModifyRequest, Authentication authentication){
+        PostModifyResponse postModifyResponse = postService.modifyPost(id, postModifyRequest, authentication.getName());
+        return Response.success(postModifyResponse);
+
     }
 
 
