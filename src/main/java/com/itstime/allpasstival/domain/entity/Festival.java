@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter//클래스 내의 모든 getter 메소드 자동 생성
@@ -38,5 +40,10 @@ public class Festival {
         return recentlyViewedFestival.getFestival();
     }
 
+    @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<ReservedFestival> reservedFestivals = new ArrayList<>();
+
+    @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<RecentlyViewedFestival> recentlyViewedFestivals = new ArrayList<>();
 
 }
