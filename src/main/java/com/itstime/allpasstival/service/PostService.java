@@ -13,6 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -24,20 +27,13 @@ public class PostService {
        Post post = validateService.validatePost(id);
         return PostInfoResponse.of(post);
     }
-//
-//    public List<PostInfoResponse> getAllPosts(Pageable pageable){
-//        Page<Post> postPages = postRepository.findAll(pageable);
-//        List<Post> postLists = new ArrayList<>();
-//        List<PostInfoResponse> postInfoResponses = new ArrayList<>();
-//        if(postPages!=null && postPages.hasContent()){
-//            postLists = postPages.getContent();
-//        }
-//        for (Post postList : postLists) {
-//            postInfoResponses.add(PostInfoResponse.of(postList));
-//        }
-//        return postInfoResponses;
-//    }
-//
+
+    public Page<PostInfoResponse> getAllPosts(Pageable pageable){
+        Page<Post> postPages = postRepository.findAll(pageable);
+        Page<PostInfoResponse> postInfoResponses = postPages.map(PostInfoResponse::of);
+        return postInfoResponses;
+    }
+
     //게시글 등록
     public PostEnrollResponse enrollPost(PostEnrollRequest request, String category, String userId){
         User user = validateService.validateUser(userId);

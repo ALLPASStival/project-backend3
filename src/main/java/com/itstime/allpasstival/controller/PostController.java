@@ -7,11 +7,14 @@ import com.itstime.allpasstival.domain.dto.Response;
 import com.itstime.allpasstival.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -31,6 +34,14 @@ public class PostController {
     public Response<PostEnrollResponse> writePost(@PathVariable String category, @RequestBody PostEnrollRequest postEnrollRequest, Authentication authentication){
         PostEnrollResponse postEnrollResponse = postService.enrollPost(postEnrollRequest,category,authentication.getName());
         return Response.success(postEnrollResponse);
+    }
+
+    //게시글 전체 조회
+    @GetMapping("")
+    public Response<Page<PostInfoResponse>> getAllPosts(@PageableDefault(size = 20, sort ="createdAt",
+            direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<PostInfoResponse> posts = postService.getAllPosts(pageable);
+        return Response.success(posts);
     }
 
 
