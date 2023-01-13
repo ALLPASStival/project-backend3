@@ -20,6 +20,8 @@ public class User extends BaseEntity{
     private Integer UserId;
     private String email;
     private String nickname;
+    private String gender;
+    private Integer age;
     private String password;
     private String profilePicUrl;
     private boolean isAdmin;
@@ -33,4 +35,7 @@ public class User extends BaseEntity{
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<RecentlyViewedFestival> recentlyViewedFestivals = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<LikedPost> likedPosts  = new ArrayList<>();
 }

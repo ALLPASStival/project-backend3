@@ -49,7 +49,9 @@ public class UserService {
         User savedUser = userRepository.save(request.toEntity(encoder.encode(request.getPassword())));
         return UserDto.builder()
                 .userId(savedUser.getUserId())
+                .gender(savedUser.getGender())
                 .email(savedUser.getEmail())
+                .age(savedUser.getAge())
                 .nickname(savedUser.getNickname())
                 .build();
     }
@@ -77,8 +79,10 @@ public class UserService {
                 .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.NOT_FOUND, ErrorCode.NOT_FOUND.getMessage()));
         return UserInfoResponse.builder()
                 .email(user.getEmail())
+                .age(user.getAge())
                 .profilePicUrl(user.getProfilePicUrl())
                 .nickname(user.getNickname())
+                .gender(user.getGender())
                 .build();
     }
 
@@ -92,7 +96,10 @@ public class UserService {
                 .nickname(request.getNickname()==null? beforeUser.getNickname() : request.getNickname())
                 .password(request.getPassword()==null? beforeUser.getPassword() : encoder.encode(request.getPassword()))
                 .email(beforeUser.getEmail())
+                .gender(request.getGender()==null?beforeUser.getGender():request.getGender())
                 .posts(beforeUser.getPosts())
+                .likedPosts(beforeUser.getLikedPosts())
+                .age(request.getAge()==null?beforeUser.getAge(): request.getAge())
                 .reservedFestivals(beforeUser.getReservedFestivals())
                 .recentlyViewedFestivals(beforeUser.getRecentlyViewedFestivals())
                 .isAdmin(beforeUser.isAdmin())
@@ -102,6 +109,8 @@ public class UserService {
                 .email(updatedUser.getEmail())
                 .profilePicUrl(updatedUser.getProfilePicUrl())
                 .nickname(updatedUser.getNickname())
+                .gender(updatedUser.getGender())
+                .age(updatedUser.getAge())
                 .build();
     }
 

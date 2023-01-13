@@ -13,4 +13,6 @@ public class UserUpdateRequest {
     private String nickname;
     private String profilePicUrl;
     private String password;
+    private String gender;
+    private Integer age;
 }

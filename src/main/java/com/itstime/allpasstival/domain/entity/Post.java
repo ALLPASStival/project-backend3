@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -34,7 +36,10 @@ public class Post extends BaseEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "festival_id", nullable = false)
+    @JoinColumn(name = "festival_id")
     @JsonIgnore
     private Festival festival;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<LikedPost> likedPosts  = new ArrayList<>();
 }
