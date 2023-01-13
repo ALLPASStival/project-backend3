@@ -18,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -130,5 +132,18 @@ public class FestivalService {
         Page<RecentlyViewedFestival> recentlyViewedFestivalPage = recentlyViewedFestivalRepository.findAllByUser(pageable, user);
         Page<Festival> festivalPage = recentlyViewedFestivalPage.map(Festival::of);
         return festivalPage.map(FestivalDetailResponse::of);
+    }
+
+    public List<FestivalDetailResponse> festivalList(Pageable pageable){
+        Page<Festival> festivalPage = festivalRepository.findAll(pageable);
+        List<Festival> festivalLists = new ArrayList<>();
+        List<FestivalDetailResponse> festivalDetailView = new ArrayList<>();
+        if(festivalPage != null && festivalPage.hasContent()){
+            festivalLists = festivalPage.getContent();
+        }
+        for(Festival festivallist : festivalLists){
+            festivalDetailView.add(FestivalDetailResponse.of(festivallist));
+        }
+        return festivalDetailView;
     }
 }
