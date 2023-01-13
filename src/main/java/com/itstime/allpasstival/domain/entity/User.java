@@ -20,6 +20,8 @@ public class User extends BaseEntity{
     private Integer UserId;
     private String email;
     private String nickname;
+    private String gender;
+    private Integer age;
     private String password;
     private String profilePicUrl;
     private boolean isAdmin;
