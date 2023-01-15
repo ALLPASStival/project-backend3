@@ -1,5 +1,6 @@
 package com.itstime.allpasstival.domain.entity;
 
+import com.itstime.allpasstival.service.CommentService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,4 +39,7 @@ public class User extends BaseEntity{
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<LikedPost> likedPosts  = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<Comment> comments  = new ArrayList<>();
 }

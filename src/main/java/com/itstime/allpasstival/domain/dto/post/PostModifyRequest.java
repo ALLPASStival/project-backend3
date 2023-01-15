@@ -24,6 +24,7 @@ public class PostModifyRequest {
                 .category(post.getCategory())
                 .imageUrl(this.imageUrl)
                 .likedPosts(post.getLikedPosts())
+                .comments(post.getComments())
                 .title(this.title)
                 .user(user)
                 .festival(post.getFestival())

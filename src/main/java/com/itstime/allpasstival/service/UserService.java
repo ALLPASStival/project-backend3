@@ -99,6 +99,7 @@ public class UserService {
                 .gender(request.getGender()==null?beforeUser.getGender():request.getGender())
                 .posts(beforeUser.getPosts())
                 .likedPosts(beforeUser.getLikedPosts())
+                .comments(beforeUser.getComments())
                 .age(request.getAge()==null?beforeUser.getAge(): request.getAge())
                 .reservedFestivals(beforeUser.getReservedFestivals())
                 .recentlyViewedFestivals(beforeUser.getRecentlyViewedFestivals())

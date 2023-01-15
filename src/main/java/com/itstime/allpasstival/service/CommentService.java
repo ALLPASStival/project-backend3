@@ -22,7 +22,7 @@ public class CommentService {
         User user = validateService.validateUser(userId);
         Post post = validateService.validatePost(postId);
         Comment comment = commentRepository.save(request.toEntity(post,user));
-        return new CommentEnrollResponse().of(comment);
+        return CommentEnrollResponse.of(comment);
     }
 
     public Page<CommentInfoResponse> getComments(Integer postId, Pageable pageable) {
@@ -39,5 +39,14 @@ public class CommentService {
         LocalDateTime createdAt = comment.getCreatedAt();
         Comment modifiedComment = commentRepository.save(request.toEntity(comment,post,user));
         return CommentModifyResponse.of(modifiedComment,createdAt);
+    }
+
+    public CommentDeleteResponse deleteComment(Integer postId, Integer id, String userId){
+        User user = validateService.validateUser(userId);
+        Post post = validateService.validatePost(postId);
+        Comment comment = validateService.validateComment(id);
+        validateService.validatePermission(comment.getUser(),user);
+        commentRepository.deleteById(id);
+        return CommentDeleteResponse.of(comment);
     }
 }

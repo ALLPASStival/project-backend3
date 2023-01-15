@@ -19,7 +19,7 @@ public class CommentEnrollResponse {
     Integer postId;
     LocalDateTime createdAt;
 
-    public CommentEnrollResponse of(Comment comment){
+    public static CommentEnrollResponse of(Comment comment){
         return CommentEnrollResponse.builder()
                 .id(comment.getId())
                 .comment(comment.getComment())

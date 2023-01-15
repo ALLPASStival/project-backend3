@@ -39,4 +39,12 @@ public class CommentController {
         CommentModifyResponse commentModifyResponse = commentService.modifyComment(postId,id,commentModifyRequest,authentication.getName());
         return Response.success(commentModifyResponse);
     }
+
+    //댓글 삭제
+    @DeleteMapping("comments/{id}")
+    public Response<CommentDeleteResponse> deleteComment(@PathVariable Integer postId, @PathVariable Integer id, Authentication authentication){
+        CommentDeleteResponse commentDeleteResponse = commentService.deleteComment(postId,id,authentication.getName());
+        return Response.success(commentDeleteResponse);
+
+    }
 }
