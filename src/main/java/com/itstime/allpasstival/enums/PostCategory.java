@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum PostCategory {
     review("review"),
     recruit("recruit"),
-    free("free");
+    free("free"),
+    service("service");
     private String category;
 }

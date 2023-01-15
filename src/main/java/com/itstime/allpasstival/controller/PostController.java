@@ -2,6 +2,7 @@ package com.itstime.allpasstival.controller;
 
 import com.itstime.allpasstival.domain.dto.post.*;
 import com.itstime.allpasstival.domain.dto.Response;
+import com.itstime.allpasstival.enums.PostCategory;
 import com.itstime.allpasstival.service.LikedPostService;
 import com.itstime.allpasstival.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +40,8 @@ public class PostController {
     //게시글 전체 조회
     @GetMapping("")
     public Response<Page<PostInfoResponse>> getAllPosts(@PageableDefault(size = 20, sort ="createdAt",
-            direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<PostInfoResponse> posts = postService.getAllPosts(pageable);
+            direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String  category) {
+        Page<PostInfoResponse> posts = postService.getAllPosts(pageable, category);
         return Response.success(posts);
     }
 

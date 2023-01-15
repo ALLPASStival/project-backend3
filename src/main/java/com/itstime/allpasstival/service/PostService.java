@@ -26,8 +26,10 @@ public class PostService {
         return PostInfoResponse.of(post);
     }
 
-    public Page<PostInfoResponse> getAllPosts(Pageable pageable){
-        Page<Post> postPages = postRepository.findAll(pageable);
+    //게시글 전체 조회
+    public Page<PostInfoResponse> getAllPosts(Pageable pageable, String category){
+        PostCategory postCategory = validateService.validatePostCategory(category);
+        Page<Post> postPages = postRepository.findAllByCategory(pageable, postCategory);
         return postPages.map(PostInfoResponse::of);
     }
 
