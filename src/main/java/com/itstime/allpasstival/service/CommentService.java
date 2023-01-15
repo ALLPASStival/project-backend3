@@ -1,8 +1,6 @@
 package com.itstime.allpasstival.service;
 
-import com.itstime.allpasstival.domain.dto.comment.CommentEnrollRequest;
-import com.itstime.allpasstival.domain.dto.comment.CommentEnrollResponse;
-import com.itstime.allpasstival.domain.dto.comment.CommentInfoResponse;
+import com.itstime.allpasstival.domain.dto.comment.*;
 import com.itstime.allpasstival.domain.entity.Comment;
 import com.itstime.allpasstival.domain.entity.Post;
 import com.itstime.allpasstival.domain.entity.User;
@@ -11,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +29,15 @@ public class CommentService {
         Post post = validateService.validatePost(postId);
         Page<Comment> commentPages = commentRepository.findAllByPost(post,pageable);
         return commentPages.map(CommentInfoResponse::of);
+    }
+
+    public CommentModifyResponse modifyComment(Integer postId, Integer id, CommentModifyRequest request, String userId) {
+        User user = validateService.validateUser(userId);
+        Post post = validateService.validatePost(postId);
+        Comment comment = validateService.validateComment(id);
+        validateService.validatePermission(comment.getUser(),user);
+        LocalDateTime createdAt = comment.getCreatedAt();
+        Comment modifiedComment = commentRepository.save(request.toEntity(comment,post,user));
+        return CommentModifyResponse.of(modifiedComment,createdAt);
     }
 }

@@ -1,15 +1,18 @@
 package com.itstime.allpasstival.service;
 
+import com.itstime.allpasstival.domain.entity.Comment;
 import com.itstime.allpasstival.domain.entity.Festival;
 import com.itstime.allpasstival.domain.entity.Post;
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.enums.PostCategory;
 import com.itstime.allpasstival.exception.AllPasstivalAppException;
 import com.itstime.allpasstival.exception.ErrorCode;
+import com.itstime.allpasstival.repository.CommentRepository;
 import com.itstime.allpasstival.repository.FestivalRepository;
 import com.itstime.allpasstival.repository.PostRepository;
 import com.itstime.allpasstival.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +22,7 @@ public class ValidateService {
     private final UserRepository userRepository;
 
     private final FestivalRepository festivalRepository;
+    private final CommentRepository commentRepository;
 
     //유저 정보 유무 확인
     public User validateUser(String userId){
@@ -53,6 +57,11 @@ public class ValidateService {
         if(!(currentUser.getUserId()==author.getUserId()||currentUser.isAdmin())){
             throw new AllPasstivalAppException(ErrorCode.INVALID_PERMISSION,ErrorCode.INVALID_PASSWORD.getMessage());
         }
+    }
+
+    public Comment validateComment(Integer commentId){
+        return commentRepository.findById(commentId)
+                .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.COMMENT_NOT_FOUND, ErrorCode.COMMENT_NOT_FOUND.getMessage()));
     }
 
 }
