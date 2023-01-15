@@ -45,6 +45,14 @@ public class PostController {
         return Response.success(posts);
     }
 
+    //게시글 검색
+    @GetMapping("/search")
+    public Response<Page<PostInfoResponse>> searchPosts(@PageableDefault(size = 20, sort ="createdAt",
+            direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String keyword, @RequestParam String searchCategory) {
+        Page<PostInfoResponse> posts = postService.searchPosts(pageable, keyword, searchCategory);
+        return Response.success(posts);
+    }
+
     //게시글 수정
     @PutMapping("/{id}")
     public Response<PostModifyResponse> modifyPost(@PathVariable Integer id, @RequestBody PostModifyRequest postModifyRequest, Authentication authentication){

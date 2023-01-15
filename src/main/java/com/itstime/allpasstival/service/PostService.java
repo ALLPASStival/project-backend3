@@ -9,11 +9,15 @@ import com.itstime.allpasstival.enums.ResponseState;
 import com.itstime.allpasstival.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +38,21 @@ public class PostService {
         return postPages.map(PostInfoResponse::of);
     }
 
+    public Page<PostInfoResponse> searchPosts(Pageable pageable, String keyword, String searchCategory){
+        Page<Post> postPages = new PageImpl<>(new ArrayList<>());
+        switch (searchCategory) {
+            case "articleContent":
+                postPages = postRepository.findAllByArticleContentContains(pageable, keyword);
+                break;
+            case "title":
+                postPages = postRepository.findAllByTitleContains(pageable, keyword);
+                break;
+            case "user":
+                postPages = postRepository.findAllByUser_NicknameContains(pageable, keyword);
+                break;
+        }
+        return postPages.map(PostInfoResponse::of);
+    }
     //게시글 등록
     public PostEnrollResponse enrollPost(PostEnrollRequest request, String category, String userId){
         User user = validateService.validateUser(userId);

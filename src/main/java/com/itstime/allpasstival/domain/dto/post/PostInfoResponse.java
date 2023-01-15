@@ -31,7 +31,7 @@ public class PostInfoResponse {
                 .articleContent(post.getArticleContent())
                 .imageUrl(post.getImageUrl())
                 .category(post.getCategory().name())
-                .state(post.getState().getState())
+                .state(post.getState()==null?null:post.getState().getState())
                 .createdAt(post.getCreatedAt())
                 .lastModifiedAt(post.getLastModifiedAt())
                 .build();
