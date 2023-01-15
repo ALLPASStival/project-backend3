@@ -5,14 +5,19 @@ import com.itstime.allpasstival.domain.entity.Festival;
 import com.itstime.allpasstival.domain.entity.Post;
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.enums.PostCategory;
+import com.itstime.allpasstival.enums.ResponseState;
 import com.itstime.allpasstival.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -26,17 +31,35 @@ public class PostService {
         return PostInfoResponse.of(post);
     }
 
-    public Page<PostInfoResponse> getAllPosts(Pageable pageable){
-        Page<Post> postPages = postRepository.findAll(pageable);
+    //게시글 전체 조회
+    public Page<PostInfoResponse> getAllPosts(Pageable pageable, String category){
+        PostCategory postCategory = validateService.validatePostCategory(category);
+        Page<Post> postPages = postRepository.findAllByCategory(pageable, postCategory);
         return postPages.map(PostInfoResponse::of);
     }
 
+    public Page<PostInfoResponse> searchPosts(Pageable pageable, String keyword, String searchCategory){
+        Page<Post> postPages = new PageImpl<>(new ArrayList<>());
+        switch (searchCategory) {
+            case "articleContent":
+                postPages = postRepository.findAllByArticleContentContains(pageable, keyword);
+                break;
+            case "title":
+                postPages = postRepository.findAllByTitleContains(pageable, keyword);
+                break;
+            case "user":
+                postPages = postRepository.findAllByUser_NicknameContains(pageable, keyword);
+                break;
+        }
+        return postPages.map(PostInfoResponse::of);
+    }
     //게시글 등록
     public PostEnrollResponse enrollPost(PostEnrollRequest request, String category, String userId){
         User user = validateService.validateUser(userId);
-        Festival festival = category.equals("free") ? null : validateService.validateFestival(request.getFestivalId());
+        Festival festival = category.equals("free")||category.equals("service") ? null : validateService.validateFestival(request.getFestivalId());
         PostCategory postCategory =  validateService.validatePostCategory(category);
-        Post savedPost = postRepository.save(request.toEntity(user,festival,postCategory));
+        ResponseState responseState = postCategory.equals(PostCategory.service)? ResponseState.onGoing : null;
+        Post savedPost = postRepository.save(request.toEntity(user,festival,postCategory,responseState));
         return PostEnrollResponse.of(savedPost);
     }
 
@@ -63,5 +86,16 @@ public class PostService {
         User user = validateService.validateUser(userId);
         Page<Post> postPages = postRepository.findAllByUser(pageable, user);
         return postPages.map(PostInfoResponse::of);
+    }
+
+    public PostModifyResponse changeState(Integer postId, String state,  String userId) {
+        Post post = validateService.validatePost(postId);
+        User user = validateService.validateUser(userId);
+        validateService.validateAdmin(user);
+        ResponseState responseState = validateService.validateState(state);
+        System.out.println(responseState.getState());
+        post.changeState(responseState);
+        postRepository.save(post);
+        return PostModifyResponse.of(post);
     }
 }

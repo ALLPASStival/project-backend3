@@ -19,6 +19,7 @@ public class PostInfoResponse {
     private String articleContent;
     private String imageUrl;
     private String category;
+    private String state;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd- hh:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd- hh:mm:ss", timezone = "Asia/Seoul")
@@ -30,6 +31,7 @@ public class PostInfoResponse {
                 .articleContent(post.getArticleContent())
                 .imageUrl(post.getImageUrl())
                 .category(post.getCategory().name())
+                .state(post.getState()==null?null:post.getState().getState())
                 .createdAt(post.getCreatedAt())
                 .lastModifiedAt(post.getLastModifiedAt())
                 .build();

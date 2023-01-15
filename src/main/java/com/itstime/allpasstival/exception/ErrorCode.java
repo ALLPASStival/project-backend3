@@ -10,6 +10,7 @@ public enum ErrorCode {
     DUPLICATED_USER_EMAIL(HttpStatus.CONFLICT,"User email duplicated"),
     USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND,"user doesn't exist"),
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND,"category doesn't exist"),
+    STATE_NOT_FOUND(HttpStatus.NOT_FOUND,"state doesn't exist"),
     FESTIVAL_NOT_FOUND(HttpStatus.NOT_FOUND,"festival doesn't exist"),
     DUPLICATED_USER_NICKNAME(HttpStatus.CONFLICT,"User nickname duplicated"),
     NOT_FOUND(HttpStatus.NOT_FOUND, "user doesn't exist"),

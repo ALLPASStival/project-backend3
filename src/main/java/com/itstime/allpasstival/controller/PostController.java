@@ -2,6 +2,7 @@ package com.itstime.allpasstival.controller;
 
 import com.itstime.allpasstival.domain.dto.post.*;
 import com.itstime.allpasstival.domain.dto.Response;
+import com.itstime.allpasstival.enums.PostCategory;
 import com.itstime.allpasstival.service.LikedPostService;
 import com.itstime.allpasstival.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,8 @@ public class PostController {
     }
 
     //게시글 등록
-    @PostMapping("/{category}")
-    public Response<PostEnrollResponse> writePost(@PathVariable String category, @RequestBody PostEnrollRequest postEnrollRequest, Authentication authentication){
+    @PostMapping("")
+    public Response<PostEnrollResponse> writePost(@RequestParam String category, @RequestBody PostEnrollRequest postEnrollRequest, Authentication authentication){
         PostEnrollResponse postEnrollResponse = postService.enrollPost(postEnrollRequest,category,authentication.getName());
         return Response.success(postEnrollResponse);
     }
@@ -39,8 +40,16 @@ public class PostController {
     //게시글 전체 조회
     @GetMapping("")
     public Response<Page<PostInfoResponse>> getAllPosts(@PageableDefault(size = 20, sort ="createdAt",
-            direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<PostInfoResponse> posts = postService.getAllPosts(pageable);
+            direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String category) {
+        Page<PostInfoResponse> posts = postService.getAllPosts(pageable, category);
+        return Response.success(posts);
+    }
+
+    //게시글 검색
+    @GetMapping("/search")
+    public Response<Page<PostInfoResponse>> searchPosts(@PageableDefault(size = 20, sort ="createdAt",
+            direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String keyword, @RequestParam String searchCategory) {
+        Page<PostInfoResponse> posts = postService.searchPosts(pageable, keyword, searchCategory);
         return Response.success(posts);
     }
 
@@ -71,6 +80,13 @@ public class PostController {
     public Response<PostLikeUpdateResponse> AddLike(@PathVariable Integer id, Authentication authentication){
         PostLikeUpdateResponse likeUpdateResponse = likedPostService.updateLike(id, authentication.getName());
         return Response.success(likeUpdateResponse);
+    }
+
+    //고객센터 답변상태 변경하기
+    @PostMapping("/{id}/change-state")
+    public Response<PostModifyResponse> changeState(@PathVariable Integer id, @RequestParam String state, Authentication authentication){
+        PostModifyResponse postModifyResponse  = postService.changeState(id, state, authentication.getName());
+        return Response.success(postModifyResponse);
     }
 
 
