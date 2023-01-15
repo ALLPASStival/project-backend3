@@ -5,6 +5,7 @@ import com.itstime.allpasstival.domain.entity.Festival;
 import com.itstime.allpasstival.domain.entity.Post;
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.enums.PostCategory;
+import com.itstime.allpasstival.enums.ResponseState;
 import com.itstime.allpasstival.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -38,7 +39,8 @@ public class PostService {
         User user = validateService.validateUser(userId);
         Festival festival = category.equals("free")||category.equals("service") ? null : validateService.validateFestival(request.getFestivalId());
         PostCategory postCategory =  validateService.validatePostCategory(category);
-        Post savedPost = postRepository.save(request.toEntity(user,festival,postCategory));
+        ResponseState responseState = postCategory.equals(PostCategory.service)? ResponseState.onGoing : null;
+        Post savedPost = postRepository.save(request.toEntity(user,festival,postCategory,responseState));
         return PostEnrollResponse.of(savedPost);
     }
 
@@ -65,5 +67,16 @@ public class PostService {
         User user = validateService.validateUser(userId);
         Page<Post> postPages = postRepository.findAllByUser(pageable, user);
         return postPages.map(PostInfoResponse::of);
+    }
+
+    public PostModifyResponse changeState(Integer postId, String state,  String userId) {
+        Post post = validateService.validatePost(postId);
+        User user = validateService.validateUser(userId);
+        validateService.validateAdmin(user);
+        ResponseState responseState = validateService.validateState(state);
+        System.out.println(responseState.getState());
+        post.changeState(responseState);
+        postRepository.save(post);
+        return PostModifyResponse.of(post);
     }
 }

@@ -5,6 +5,7 @@ import com.itstime.allpasstival.domain.entity.Festival;
 import com.itstime.allpasstival.domain.entity.Post;
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.enums.PostCategory;
+import com.itstime.allpasstival.enums.ResponseState;
 import com.itstime.allpasstival.exception.AllPasstivalAppException;
 import com.itstime.allpasstival.exception.ErrorCode;
 import com.itstime.allpasstival.repository.CommentRepository;
@@ -52,9 +53,25 @@ public class ValidateService {
         throw new AllPasstivalAppException(ErrorCode.CATEGORY_NOT_FOUND, ErrorCode.CATEGORY_NOT_FOUND.getMessage());
     }
 
+    //고객센터 state 유무 확인
+    public ResponseState validateState(String responseState){
+        for(ResponseState state : ResponseState.values()){
+            if(state.getState().equals(responseState)){
+                return state;
+            }
+        }
+        throw new AllPasstivalAppException(ErrorCode.STATE_NOT_FOUND, ErrorCode.STATE_NOT_FOUND.getMessage());
+    }
+
     //권한 조회
     public void validatePermission(User author, User currentUser){
         if(!(currentUser.getUserId()==author.getUserId()||currentUser.isAdmin())){
+            throw new AllPasstivalAppException(ErrorCode.INVALID_PERMISSION,ErrorCode.INVALID_PASSWORD.getMessage());
+        }
+    }
+
+    public void validateAdmin(User currentUser){
+        if(!currentUser.isAdmin()){
             throw new AllPasstivalAppException(ErrorCode.INVALID_PERMISSION,ErrorCode.INVALID_PASSWORD.getMessage());
         }
     }

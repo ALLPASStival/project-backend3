@@ -40,4 +40,6 @@ public class LikedPostService {
         Post post = validateService.validatePost(postId);
         return likedPostRepository.countAllByPostId(postId);
     }
+
+
 }
