@@ -6,8 +6,11 @@ import com.itstime.allpasstival.domain.dto.festival.FestivalReserveResponse;
 import com.itstime.allpasstival.service.FestivalService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/festivals")
@@ -87,6 +90,11 @@ public class FestivalApiController {
     public Response<FestivalReserveResponse> reserveFestival(@PathVariable Integer id, Authentication authentication){
         FestivalReserveResponse festivalReserveResponse = festivalService.updateReservedFestival(id, authentication.getName());
         return Response.success(festivalReserveResponse);
+    }
+
+    @GetMapping("/festivals/list")
+    public List<FestivalDetailResponse> festivalList(Pageable pageable){
+        return festivalService.festivalList(pageable);
     }
 
 
