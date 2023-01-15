@@ -1,9 +1,7 @@
 package com.itstime.allpasstival.controller;
 
 import com.itstime.allpasstival.domain.dto.Response;
-import com.itstime.allpasstival.domain.dto.comment.CommentEnrollRequest;
-import com.itstime.allpasstival.domain.dto.comment.CommentEnrollResponse;
-import com.itstime.allpasstival.domain.dto.comment.CommentInfoResponse;
+import com.itstime.allpasstival.domain.dto.comment.*;
 import com.itstime.allpasstival.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,5 +31,20 @@ public class CommentController {
     public Response<CommentEnrollResponse> writeComment(@PathVariable Integer postId, @RequestBody CommentEnrollRequest commentEnrollRequest, Authentication authentication){
         CommentEnrollResponse commentEnrollResponse = commentService.enrollComment(postId,commentEnrollRequest,authentication.getName());
         return Response.success(commentEnrollResponse);
+    }
+
+    //댓글 수정
+    @PutMapping("/comments/{id}")
+    public Response<CommentModifyResponse> modifyComment(@PathVariable Integer postId, @PathVariable Integer id, @RequestBody CommentModifyRequest commentModifyRequest, Authentication authentication){
+        CommentModifyResponse commentModifyResponse = commentService.modifyComment(postId,id,commentModifyRequest,authentication.getName());
+        return Response.success(commentModifyResponse);
+    }
+
+    //댓글 삭제
+    @DeleteMapping("comments/{id}")
+    public Response<CommentDeleteResponse> deleteComment(@PathVariable Integer postId, @PathVariable Integer id, Authentication authentication){
+        CommentDeleteResponse commentDeleteResponse = commentService.deleteComment(postId,id,authentication.getName());
+        return Response.success(commentDeleteResponse);
+
     }
 }

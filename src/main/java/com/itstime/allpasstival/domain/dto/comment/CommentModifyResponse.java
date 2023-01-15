@@ -12,20 +12,22 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class CommentEnrollResponse {
+public class CommentModifyResponse {
     Integer id;
     String comment;
     String userName;
     Integer postId;
     LocalDateTime createdAt;
+    LocalDateTime lastModifiedAt;
 
-    public static CommentEnrollResponse of(Comment comment){
-        return CommentEnrollResponse.builder()
+    public static CommentModifyResponse of(Comment comment, LocalDateTime createdAt){
+        return CommentModifyResponse.builder()
                 .id(comment.getId())
                 .comment(comment.getComment())
                 .userName(comment.getUser().getNickname())
                 .postId(comment.getPost().getPostId())
-                .createdAt(comment.getCreatedAt())
+                .createdAt(createdAt)
+                .lastModifiedAt(comment.getLastModifiedAt())
                 .build();
     }
 }

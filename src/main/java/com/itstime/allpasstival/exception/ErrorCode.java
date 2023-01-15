@@ -15,6 +15,7 @@ public enum ErrorCode {
     NOT_FOUND(HttpStatus.NOT_FOUND, "user doesn't exist"),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "password is not matched"),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "post doesn't exist"),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "comment doesn't exist"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Token is not valid."),
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "User authorization failed"),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "database error")
