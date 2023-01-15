@@ -6,18 +6,18 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor//모든 필드 값을 받는 생성자
-@NoArgsConstructor//파라미터 없는 기본 생성자
-@Getter//접근자
 @Builder
-public class FestivalSaveResponseDto {
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+public class FestivalUpdateResponseDto {
     private Integer festivalId;
     private String message;
 
-    public static FestivalSaveResponseDto of(Festival festival) {
-        return FestivalSaveResponseDto.builder()
+    public static FestivalUpdateResponseDto of(Festival festival) {
+        return FestivalUpdateResponseDto.builder()
                 .festivalId(festival.getFestivalId())
-                .message("등록 완료되었습니다")
+                .message("포스트 수정 완료")
                 .build();
     }
 }

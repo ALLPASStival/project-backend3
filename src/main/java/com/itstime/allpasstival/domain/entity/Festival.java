@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,20 +22,21 @@ public class Festival {
     @Id//프라임키.축제 id,VARCHAR
     @GeneratedValue(strategy = GenerationType.IDENTITY)//프라임키 생성 규칙. 이걸 추가하면 자동생성된대요
     private Integer festivalId;
-    private String festivalName;//축제이름VARCHAR
-    private String holdingVenue;//개최장소VARCHAR
-    private String startDate;//시작일시DATE
-    private String finishDate;//종료일시DATE
-    private String hostInst;//주관기관VARCHAR
-    private String hostOrg;//주최기관VARCHAR
-    private String telNum;//전화번호VARCHAR
-    private String homepAddr;//홈페이지 주소VARCHAR
-    private String streetAddr;//도로명 주소VARCHAR
+    private String festivalName;//축제이름 VARCHAR
+    private String holdingVenue;//개최장소 VARCHAR
+    private String startDate;//시작일시 DATE
+    private  String finishDate;//종료일시 DATE
+    private String hostInst;//주관기관 VARCHAR
+    private String hostOrg;//주최기관 VARCHAR
+    private String telNum;//전화번호 VARCHAR
+    private String homepAddr;//홈페이지 주소 VARCHAR
+    private String streetAddr;//도로명 주소 VARCHAR
     private Integer view;//조회수
     private String etc;//비고TEXT
     private String author;
 
     public static Festival of(ReservedFestival reservedFestival) {
+
         return reservedFestival.getFestival();
     }
     public static Festival of(RecentlyViewedFestival recentlyViewedFestival) {

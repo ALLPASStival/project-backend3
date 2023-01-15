@@ -1,16 +1,21 @@
 package com.itstime.allpasstival.controller;
 
 import com.itstime.allpasstival.domain.dto.Response;
-import com.itstime.allpasstival.domain.dto.festival.FestivalDetailResponse;
-import com.itstime.allpasstival.domain.dto.festival.FestivalReserveResponse;
+import com.itstime.allpasstival.domain.dto.festival.*;
+import com.itstime.allpasstival.domain.dto.post.PostDeleteResponse;
+import com.itstime.allpasstival.domain.dto.post.PostLikeUpdateResponse;
+import com.itstime.allpasstival.domain.dto.post.PostModifyRequest;
+import com.itstime.allpasstival.domain.dto.post.PostModifyResponse;
 import com.itstime.allpasstival.service.FestivalService;
+import com.itstime.allpasstival.service.LikedPostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/festivals")
@@ -19,55 +24,22 @@ import java.util.List;
 public class FestivalApiController {
 
     private final FestivalService festivalService ;
+    private final LikedPostService likedPostService;
 
-
-    /*//글 작성처리
-    @PostMapping("/api/festivals")
-    public Integer save(@RequestBody FestivalSaveRequestDto requestDto){
-
-        return festivalService.save(requestDto);
+    //글 작성처리
+    @PostMapping("")
+    public Response<FestivalSaveResponseDto> saveFestival(@RequestBody FestivalSaveRequestDto requestDto){
+        FestivalSaveResponseDto saveResponse = festivalService.save(requestDto);
+        return Response.success(saveResponse);
     }
 
     //게시글 수정기능
-    @PutMapping("/api/festivals/{id}")
-    public String Modify(@PathVariable ("id") Integer id, Model model){
-        model.addAttribute("festivalmodify", FestivalService.viewDetail(id));
-        return "modify";
+    @PutMapping("/{id}")
+    public Response<FestivalUpdateResponseDto> modifyfestival(@PathVariable Integer id, @RequestBody  FestivalUpdateRequestDto updateRequest){
+        FestivalUpdateResponseDto festivalModifyResponse = festivalService.modifyfestival(id, updateRequest);
+        return Response.success(festivalModifyResponse);
+
     }
-
-    @PostMapping("/api/festivals/{id")
-    public String Update(@PathVariable("id") Integer id, Festival festivals, Model model, MultipartFile file){
-        FestivalUpdateRequestDto dto = FestivalService.findByid(id);
-        model.addAttribute("update",dto);
-
-        return "redirect:i/festivals/list";
-    }
-*/
-    //게시글 리스트
-   /* @GetMapping("/api/festivals/list")
-    public String festivalList(Model model,  @PageableDefault(page = 0,size = 10,sort = "id",direction = Sort.Direction.DESC)Pageable pageable, String keyWord){
-
-
-        Page<Festival> list = null;
-        if(keyWord == null){
-            //검색키워드가 안들어오면
-            list = festivalService.fesList(pageable);
-        }
-        else{
-            //들어오면
-            list = festivalService.festivalSearch(keyWord, pageable);
-        }
-
-
-        int Now = list.getPageable().getPageNumber() + 1;//페이지는 0부터 시작하니까
-        int start = Math.max(Now-4,1);
-        int End = Math.min(Now+5, list.getTotalPages());
-        model.addAttribute("list",list);
-        model.addAttribute("now",Now);
-        model.addAttribute("start",start);
-        model.addAttribute("End",End);
-        return "List festival";
-    }*/
 
     //축제글 세부 조회.
     @GetMapping(value="/{id}")
@@ -77,13 +49,19 @@ public class FestivalApiController {
         return Response.success(festivalDetailResponse);
     }
 
-   /* //삭제기능
-    @GetMapping("/api/festivals/delete")
-    public String Delete(Integer id){
-        festivalService.Delete(id);
-        //삭제 후 리스트로 다시 돌아감
-        return "redirect:i/festivals/list";
-    }*/
+    /* //삭제기능
+     @GetMapping("/api/festivals/delete")
+     public String Delete(Integer id){
+         festivalService.Delete(id);
+         //삭제 후 리스트로 다시 돌아감
+         return "redirect:i/festivals/list";
+     }*/
+    @DeleteMapping("/{id}")
+    public Response<FestivalDeleteResponse> deletePost(@PathVariable Integer id){
+        FestivalDeleteResponse festivalDeleteResponse = festivalService.deleteFestival(id);
+        return Response.success(festivalDeleteResponse);
+
+    }
 
     //찜한 축제 수정
     @PostMapping("/{id}/reserves")
@@ -92,10 +70,21 @@ public class FestivalApiController {
         return Response.success(festivalReserveResponse);
     }
 
-    @GetMapping("/festivals/list")
-    public List<FestivalDetailResponse> festivalList(Pageable pageable){
-        return festivalService.festivalList(pageable);
+    //리스트
+    @GetMapping("/list")
+    public Response<Page<FestivalDetailResponse>> festivallist(@PageableDefault(size = 20, sort ="createdAt",
+            direction = Sort.Direction.DESC)Pageable pageable){
+        Page<FestivalDetailResponse> list = festivalService.festivalList(pageable);
+        return Response.success(list);
     }
+
+    //좋아요
+    @GetMapping("/{id}/likes")
+    public Response<Long> CntLike(@PathVariable Integer id){
+        return Response.success(likedPostService.countLike(id));
+    }
+
+    //월별 일정관리
 
 
 

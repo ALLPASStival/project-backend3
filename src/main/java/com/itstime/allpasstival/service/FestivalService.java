@@ -1,14 +1,9 @@
 package com.itstime.allpasstival.service;
 
 
-import com.itstime.allpasstival.domain.dto.festival.FestivalDetailResponse;
-import com.itstime.allpasstival.domain.dto.festival.FestivalReserveResponse;
-import com.itstime.allpasstival.domain.dto.festival.FestivalSaveRequestDto;
-import com.itstime.allpasstival.domain.dto.festival.FestivalUpdateRequestDto;
-import com.itstime.allpasstival.domain.entity.Festival;
-import com.itstime.allpasstival.domain.entity.RecentlyViewedFestival;
-import com.itstime.allpasstival.domain.entity.ReservedFestival;
-import com.itstime.allpasstival.domain.entity.User;
+import com.itstime.allpasstival.domain.dto.festival.*;
+import com.itstime.allpasstival.domain.dto.post.PostDeleteResponse;
+import com.itstime.allpasstival.domain.entity.*;
 import com.itstime.allpasstival.repository.FestivalRepository;
 import com.itstime.allpasstival.repository.RecentlyViewedFestivalRepository;
 import com.itstime.allpasstival.repository.ReservedFestivalRepository;
@@ -18,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -36,11 +29,10 @@ public class FestivalService {
 
 
     //리스트 조회
-    public static Page<Festival> fesList(Pageable pageable){
-
-        return null;
+    public Page<FestivalDetailResponse> festivalList(Pageable pageable){
+        Page<Festival> festivalPage = festivalRepository.findAll(pageable);
+        return festivalPage.map(FestivalDetailResponse::of);
     }
-
     public static FestivalUpdateRequestDto findByid(Integer id) {
 
         return FestivalUpdateRequestDto.builder().build();
@@ -48,9 +40,17 @@ public class FestivalService {
 
 
     //글 작성
-    public Integer save(FestivalSaveRequestDto requestDto) {
-        return festivalRepository.save(requestDto.toEntity()).getFestivalId();
+    public FestivalSaveResponseDto save(FestivalSaveRequestDto requestDto) {
+        Festival festival = festivalRepository.save(requestDto.toEntity());
+        return FestivalSaveResponseDto.of(festival);
     }
+    //게시글 수정
+    public FestivalUpdateResponseDto modifyfestival(Integer id, FestivalUpdateRequestDto updateRequest){
+        Festival festival = validateService.validatePost(id).getFestival();
+        Festival modifiedFestival = festivalRepository.save(updateRequest.toEntity(festival));
+        return FestivalUpdateResponseDto.of(modifiedFestival);
+    }
+
 
 
     //리스트에서 게시글 세부조회. 게시글의 id를 받아와서 반환
@@ -74,17 +74,19 @@ public class FestivalService {
 
     //검색기능
     ///public Page<Festival> festivalSearch(String keyWord, Pageable pageable){
-       /// return festivalRepository
+    /// return festivalRepository
     //.findByKeyWordContaining(keyWord,pageable);
     ///}
 
 
     //게시글 삭제하는거
     //게시글 아이디 받아서 삭제
-    public void Delete(Integer id){
-
-        festivalRepository.deleteById((id));
+    public FestivalDeleteResponse deleteFestival(Integer id){
+        Festival festival = validateService.validateFestival(id);
+        festivalRepository.deleteById(id);
+        return FestivalDeleteResponse.of(festival);
     }
+
 
     //찜한 축제 수정
     public FestivalReserveResponse updateReservedFestival(Integer festivalId, String userId){
@@ -134,16 +136,5 @@ public class FestivalService {
         return festivalPage.map(FestivalDetailResponse::of);
     }
 
-    public List<FestivalDetailResponse> festivalList(Pageable pageable){
-        Page<Festival> festivalPage = festivalRepository.findAll(pageable);
-        List<Festival> festivalLists = new ArrayList<>();
-        List<FestivalDetailResponse> festivalDetailView = new ArrayList<>();
-        if(festivalPage != null && festivalPage.hasContent()){
-            festivalLists = festivalPage.getContent();
-        }
-        for(Festival festivallist : festivalLists){
-            festivalDetailView.add(FestivalDetailResponse.of(festivallist));
-        }
-        return festivalDetailView;
-    }
+
 }
