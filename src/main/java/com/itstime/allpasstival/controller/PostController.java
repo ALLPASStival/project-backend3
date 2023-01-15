@@ -31,8 +31,8 @@ public class PostController {
     }
 
     //게시글 등록
-    @PostMapping("/{category}")
-    public Response<PostEnrollResponse> writePost(@PathVariable String category, @RequestBody PostEnrollRequest postEnrollRequest, Authentication authentication){
+    @PostMapping("")
+    public Response<PostEnrollResponse> writePost(@RequestParam String category, @RequestBody PostEnrollRequest postEnrollRequest, Authentication authentication){
         PostEnrollResponse postEnrollResponse = postService.enrollPost(postEnrollRequest,category,authentication.getName());
         return Response.success(postEnrollResponse);
     }
@@ -40,7 +40,7 @@ public class PostController {
     //게시글 전체 조회
     @GetMapping("")
     public Response<Page<PostInfoResponse>> getAllPosts(@PageableDefault(size = 20, sort ="createdAt",
-            direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String  category) {
+            direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String category) {
         Page<PostInfoResponse> posts = postService.getAllPosts(pageable, category);
         return Response.success(posts);
     }
