@@ -2,6 +2,7 @@ package com.itstime.allpasstival.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.itstime.allpasstival.enums.PostCategory;
+import com.itstime.allpasstival.enums.ResponseState;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,8 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PostCategory category;
 
+    @Enumerated(EnumType.STRING)
+    private ResponseState state;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
