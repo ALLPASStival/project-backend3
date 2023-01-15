@@ -18,7 +18,7 @@ import java.util.List;
 @Entity //테이블과 링크될 클래스
 @Builder
 @AllArgsConstructor
-public class Festival {
+public class Festival{
     @Id//프라임키.축제 id,VARCHAR
     @GeneratedValue(strategy = GenerationType.IDENTITY)//프라임키 생성 규칙. 이걸 추가하면 자동생성된대요
     private Integer festivalId;
