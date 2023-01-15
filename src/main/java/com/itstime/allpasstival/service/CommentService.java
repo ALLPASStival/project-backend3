@@ -18,12 +18,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final ValidateService validateService;
 
-//    public CommentEnrollResponse enrollComment(Integer postId, CommentEnrollRequest request, String userId){
-//        User user = validateService.validateUser(userId);
-//        Post post = validateService.validatePost(postId);
-//        Comment comment = commentRepository.save(request.toEntity(post,user));
-//        return new CommentEnrollResponse().of(comment);
-//    }
+    public CommentEnrollResponse enrollComment(Integer postId, CommentEnrollRequest request, String userId){
+        User user = validateService.validateUser(userId);
+        Post post = validateService.validatePost(postId);
+        Comment comment = commentRepository.save(request.toEntity(post,user));
+        return new CommentEnrollResponse().of(comment);
+    }
 
     public Page<CommentInfoResponse> getComments(Integer postId, Pageable pageable) {
         Post post = validateService.validatePost(postId);

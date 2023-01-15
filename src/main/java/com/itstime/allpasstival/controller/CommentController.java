@@ -29,9 +29,9 @@ public class CommentController {
     }
 
     //댓글 작성
-//    @PostMapping("/comments")
-//    public Response<CommentEnrollResponse> writeComment(@PathVariable Integer postId, @RequestBody CommentEnrollRequest commentEnrollRequest, Authentication authentication){
-//        CommentEnrollResponse commentEnrollResponse = commentService.enrollComment(postId,commentEnrollRequest,authentication.getName());
-//        return Response.success(commentEnrollResponse);
-//    }
+    @PostMapping("/comments")
+    public Response<CommentEnrollResponse> writeComment(@PathVariable Integer postId, @RequestBody CommentEnrollRequest commentEnrollRequest, Authentication authentication){
+        CommentEnrollResponse commentEnrollResponse = commentService.enrollComment(postId,commentEnrollRequest,authentication.getName());
+        return Response.success(commentEnrollResponse);
+    }
 }
