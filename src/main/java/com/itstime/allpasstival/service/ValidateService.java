@@ -66,13 +66,13 @@ public class ValidateService {
     //권한 조회
     public void validatePermission(User author, User currentUser){
         if(!(currentUser.getUserId()==author.getUserId()||currentUser.isAdmin())){
-            throw new AllPasstivalAppException(ErrorCode.INVALID_PERMISSION,ErrorCode.INVALID_PASSWORD.getMessage());
+            throw new AllPasstivalAppException(ErrorCode.INVALID_PERMISSION,ErrorCode.INVALID_PERMISSION.getMessage());
         }
     }
 
     public void validateAdmin(User currentUser){
         if(!currentUser.isAdmin()){
-            throw new AllPasstivalAppException(ErrorCode.INVALID_PERMISSION,ErrorCode.INVALID_PASSWORD.getMessage());
+            throw new AllPasstivalAppException(ErrorCode.INVALID_PERMISSION,ErrorCode.INVALID_PERMISSION.getMessage());
         }
     }
 
