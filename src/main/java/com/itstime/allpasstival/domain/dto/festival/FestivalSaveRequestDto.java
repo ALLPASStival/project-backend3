@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class FestivalSaveRequestDto {
-
     private Integer festivalID;
     private String festivalName;//축제이름VARCHAR
     private String holdingVenue;//개최장소VARCHAR
@@ -24,6 +23,8 @@ public class FestivalSaveRequestDto {
     private String streetAddr;//도로명 주소VARCHAR
     private Integer view;//조회수
     private String etc;//비고TEXT
+    private String letitude;
+    private String longitude;
     private String author;
 
 
@@ -40,8 +41,11 @@ public class FestivalSaveRequestDto {
                 .streetAddr(streetAddr)
                 .view(view)
                 .etc(etc)
+                .longitude(longitude)
+                .letitude(letitude)
                 .author(author)//임의로 넣은거
                 .build();
     }
+
 
 }

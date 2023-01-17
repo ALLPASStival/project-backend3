@@ -2,12 +2,9 @@ package com.itstime.allpasstival.controller;
 
 import com.itstime.allpasstival.domain.dto.Response;
 import com.itstime.allpasstival.domain.dto.festival.*;
-import com.itstime.allpasstival.domain.dto.post.PostDeleteResponse;
-import com.itstime.allpasstival.domain.dto.post.PostLikeUpdateResponse;
-import com.itstime.allpasstival.domain.dto.post.PostModifyRequest;
-import com.itstime.allpasstival.domain.dto.post.PostModifyResponse;
 import com.itstime.allpasstival.service.FestivalService;
 import com.itstime.allpasstival.service.LikedPostService;
+import com.itstime.allpasstival.service.ValidateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,6 +22,7 @@ public class FestivalApiController {
 
     private final FestivalService festivalService ;
     private final LikedPostService likedPostService;
+    private final ValidateService validateService;
 
     //글 작성처리
     @PostMapping("")
@@ -49,13 +47,7 @@ public class FestivalApiController {
         return Response.success(festivalDetailResponse);
     }
 
-    /* //삭제기능
-     @GetMapping("/api/festivals/delete")
-     public String Delete(Integer id){
-         festivalService.Delete(id);
-         //삭제 후 리스트로 다시 돌아감
-         return "redirect:i/festivals/list";
-     }*/
+    //삭제기능
     @DeleteMapping("/{id}")
     public Response<FestivalDeleteResponse> deletePost(@PathVariable Integer id){
         FestivalDeleteResponse festivalDeleteResponse = festivalService.deleteFestival(id);
@@ -81,7 +73,14 @@ public class FestivalApiController {
     //좋아요
     @GetMapping("/{id}/likes")
     public Response<Long> CntLike(@PathVariable Integer id){
-        return Response.success(likedPostService.countLike(id));
+        return Response.success(festivalService.cntLike(id));
+    }
+
+    //좋아요 등록&취소
+    @PostMapping("/{id}/likes")
+    public Response<FestivalLikedResponse> AddLike(@PathVariable Integer id, Authentication authentication){
+        FestivalLikedResponse likeUpdateResponse = festivalService.upDate(id, authentication.getName());
+        return Response.success(likeUpdateResponse);
     }
 
     //월별 일정관리
