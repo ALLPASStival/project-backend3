@@ -4,6 +4,7 @@ package com.itstime.allpasstival.service;
 import com.itstime.allpasstival.domain.dto.festival.*;
 import com.itstime.allpasstival.domain.dto.post.PostDeleteResponse;
 import com.itstime.allpasstival.domain.entity.*;
+import com.itstime.allpasstival.repository.FestivalLikedRepository;
 import com.itstime.allpasstival.repository.FestivalRepository;
 import com.itstime.allpasstival.repository.RecentlyViewedFestivalRepository;
 import com.itstime.allpasstival.repository.ReservedFestivalRepository;
@@ -25,7 +26,7 @@ public class FestivalService {
 
     private final RecentlyViewedFestivalRepository recentlyViewedFestivalRepository;
 
-
+    private final FestivalLikedRepository festivalLikedRepository;
 
 
     //리스트 조회
@@ -46,7 +47,7 @@ public class FestivalService {
     }
     //게시글 수정
     public FestivalUpdateResponseDto modifyfestival(Integer id, FestivalUpdateRequestDto updateRequest){
-        Festival festival = validateService.validatePost(id).getFestival();
+        Festival festival = validateService.validateFestival(id);
         Festival modifiedFestival = festivalRepository.save(updateRequest.toEntity(festival));
         return FestivalUpdateResponseDto.of(modifiedFestival);
     }
@@ -136,5 +137,29 @@ public class FestivalService {
         return festivalPage.map(FestivalDetailResponse::of);
     }
 
+
+    public FestivalLikedResponse upDate(Integer id,String userId){
+        User user = validateService.validateUser(userId);
+        Festival festival = validateService.validateFestival(id);
+        Optional<FestivalLiked> festivalLiked = festivalLikedRepository.findByFestivalAndUser(festival,user);
+        if(festivalLiked.isPresent()){
+            validateService.validatePermission(festivalLiked.get().getUser(),user);
+            festivalLikedRepository.delete(festivalLiked.get());
+            return FestivalLikedResponse.builder()
+                    .message("좋아요를 삭제했습니다.")
+                    .build();
+        }
+        else{
+            festivalLikedRepository.save(FestivalLiked.of(festival,user));
+            return FestivalLikedResponse.builder()
+                    .message("좋아요를 눌렀습니다.")
+                    .build();
+        }
+    }//서비스 계층 : 유저정보있는지 확인, 그리고 포스트 정보도 있는지 확인. 레포지토리 인터페이스에 JPA 상속받아서 생긴 기능으로
+    //만약 눌려있다면-> delete()함수로 좋아요를 지우고,
+
+    public Long cntLike(Integer id){;
+        return festivalLikedRepository.countAllByFestivalId(id);
+    }
 
 }
