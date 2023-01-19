@@ -2,7 +2,6 @@ package com.itstime.allpasstival.service;
 
 
 import com.itstime.allpasstival.domain.dto.festival.*;
-import com.itstime.allpasstival.domain.dto.post.PostDeleteResponse;
 import com.itstime.allpasstival.domain.entity.*;
 import com.itstime.allpasstival.repository.FestivalLikedRepository;
 import com.itstime.allpasstival.repository.FestivalRepository;
@@ -34,23 +33,25 @@ public class FestivalService {
         Page<Festival> festivalPage = festivalRepository.findAll(pageable);
         return festivalPage.map(FestivalDetailResponse::of);
     }
-    public static FestivalUpdateRequestDto findByid(Integer id) {
-
-        return FestivalUpdateRequestDto.builder().build();
+    public FestivalDetailResponse findById(Integer id) {
+        Festival festival = festivalRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 축제 내용이 없습니다"+id));
+        return FestivalDetailResponse.of(festival);
     }
 
 
     //글 작성
-    public FestivalSaveResponseDto save(FestivalSaveRequestDto requestDto) {
+    public FestivalSaveResponseDto festivalSave(FestivalSaveRequestDto requestDto) {
         Festival festival = festivalRepository.save(requestDto.toEntity());
         return FestivalSaveResponseDto.of(festival);
     }
     //게시글 수정
-    public FestivalUpdateResponseDto modifyfestival(Integer id, FestivalUpdateRequestDto updateRequest){
+    public FestivalUpdateResponseDto modifyFestival(Integer id, FestivalUpdateRequestDto updateRequest){
         Festival festival = validateService.validateFestival(id);
         Festival modifiedFestival = festivalRepository.save(updateRequest.toEntity(festival));
         return FestivalUpdateResponseDto.of(modifiedFestival);
     }
+
+
 
 
 
@@ -72,12 +73,11 @@ public class FestivalService {
                 author(festival.getAuthor()).
                 build();
     }
-
     //검색기능
-    ///public Page<Festival> festivalSearch(String keyWord, Pageable pageable){
-    /// return festivalRepository
-    //.findByKeyWordContaining(keyWord,pageable);
-    ///}
+    public Page<FestivalDetailResponse> festivalSearch(String keyWord, Pageable pageable){
+     Page<Festival> festival = festivalRepository.findAllByFestivalNameContaining(keyWord,pageable);
+     return festival.map(FestivalDetailResponse::of);
+    }
 
 
     //게시글 삭제하는거
