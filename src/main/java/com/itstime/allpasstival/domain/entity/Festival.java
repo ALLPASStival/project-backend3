@@ -19,7 +19,7 @@ import java.util.List;
 @Entity //테이블과 링크될 클래스
 @Builder
 @AllArgsConstructor
-public class Festival{
+public class Festival extends BaseEntity{
     @Id//프라임키.축제 id,VARCHAR
     @GeneratedValue(strategy = GenerationType.IDENTITY)//프라임키 생성 규칙. 이걸 추가하면 자동생성된대요
     private Integer festivalId;
@@ -48,11 +48,6 @@ public class Festival{
     public static Festival of(RecentlyViewedFestival recentlyViewedFestival) {
         return recentlyViewedFestival.getFestival();
     }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
-    private User user;
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<ReservedFestival> reservedFestivals = new ArrayList<>();
