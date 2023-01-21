@@ -8,12 +8,14 @@ import com.itstime.allpasstival.repository.FestivalLikedRepository;
 import com.itstime.allpasstival.repository.FestivalRepository;
 import com.itstime.allpasstival.repository.RecentlyViewedFestivalRepository;
 import com.itstime.allpasstival.repository.ReservedFestivalRepository;
+import com.itstime.allpasstival.utils.FestivalCSVParsing;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -27,6 +29,35 @@ public class FestivalService {
     private final RecentlyViewedFestivalRepository recentlyViewedFestivalRepository;
 
     private final FestivalLikedRepository festivalLikedRepository;
+
+    public void addFestival() throws IOException {
+        FestivalCSVParsing festivalCSVParsing = new FestivalCSVParsing("C:\\Users\\HeongJi\\Downloads\\test.txt");
+        String[] line=null;
+        while((line = festivalCSVParsing.nextRead())!=null){
+            int cnt = 0;
+            for(String a : line){
+                System.out.print(cnt++);
+                System.out.print(" ");
+                System.out.println(a);
+            }
+            Festival festival = Festival.builder()
+                    .festivalName(line[0])
+                    .holdingVenue(line[1])
+                    .startDate(line[2])
+                    .finishDate(line[3])
+                    .content(line[4])
+                    .hostOrg(line[5])
+                    .hostInst(line[6])
+                    .telNum(line[8])
+                    .homepAddr(line[9])
+                    .streetAddr(line[11])
+                    .latitude(line[13])
+                    .longitude(line[14])
+                    .build();
+            festivalRepository.save(festival);
+            System.out.println();
+        }
+    }
 
 
     //리스트 조회

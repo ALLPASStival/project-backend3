@@ -14,6 +14,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("api/v1/festivals")
 @RequiredArgsConstructor
@@ -23,6 +25,12 @@ public class FestivalApiController {
     private final FestivalService festivalService ;
     private final LikedPostService likedPostService;
     private final ValidateService validateService;
+
+    @PostMapping("/add")
+    public String saveFestival() throws IOException {
+        festivalService.addFestival();
+        return "end";
+    }
 
     //글 작성처리
     @PostMapping("")

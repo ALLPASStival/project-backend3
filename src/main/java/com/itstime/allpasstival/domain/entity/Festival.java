@@ -3,7 +3,6 @@ package com.itstime.allpasstival.domain.entity;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.itstime.allpasstival.domain.dto.festival.FestivalLikedResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,10 +24,9 @@ public class Festival extends BaseEntity{
     private Integer festivalId;
     private String festivalName;//축제이름 VARCHAR
     private String holdingVenue;//개최장소 VARCHAR
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String startDate;//시작일시 DATE
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String finishDate;//종료일시 DATE
+    private String content; //축제 내용
     private String hostInst;//주최기관 VARCHAR
     private String hostOrg;//주관기관 VARCHAR
     private String telNum;//전화번호 VARCHAR
@@ -37,8 +35,8 @@ public class Festival extends BaseEntity{
     private Integer view;//조회수
     private String etc;//비고TEXT
     private String author;
-    private String letitude;
-    private String longitude;
+    private String latitude; //위도
+    private String longitude; //경도
 
 
     public static Festival of(ReservedFestival reservedFestival) {
@@ -49,10 +47,6 @@ public class Festival extends BaseEntity{
         return recentlyViewedFestival.getFestival();
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
-    private User user;
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<ReservedFestival> reservedFestivals = new ArrayList<>();
