@@ -71,8 +71,8 @@ public class FestivalApiController {
     }
 
     //리스트
-    @GetMapping("/list")
-    public Response<Page<FestivalDetailResponse>> festivallist(@PageableDefault(size = 20, sort ="startDate",
+    @GetMapping("")
+    public Response<Page<FestivalDetailResponse>> festivalList(@PageableDefault(size = 10, sort ="startDate",
             direction = Sort.Direction.DESC)Pageable pageable){
         Page<FestivalDetailResponse> list = festivalService.festivalList(pageable);
         return Response.success(list);
