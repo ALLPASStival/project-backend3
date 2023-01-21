@@ -1,4 +1,4 @@
-package com.itstime.allpasstival.controller;
+package com.itstime.allpasstival.api;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
