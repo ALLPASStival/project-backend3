@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.java.Log;
 
 @Builder
 @AllArgsConstructor
@@ -19,7 +18,7 @@ public class PostEnrollRequest {
     private String title;
     private String articleContent;
     private String imageUrl;
-    private Integer festivalId;
+    private String festivalName;
     public Post toEntity(User user, Festival festival, PostCategory category, ResponseState responseState) {
         return Post.builder()
                 .articleContent(this.articleContent)

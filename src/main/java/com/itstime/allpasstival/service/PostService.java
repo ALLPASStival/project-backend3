@@ -11,13 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +54,7 @@ public class PostService {
     //게시글 등록
     public PostEnrollResponse enrollPost(PostEnrollRequest request, String category, String userId){
         User user = validateService.validateUser(userId);
-        Festival festival = category.equals("free")||category.equals("service") ? null : validateService.validateFestival(request.getFestivalId());
+        Festival festival = category.equals("free")||category.equals("service") ? null : validateService.validateFestival(request.getFestivalName());
         PostCategory postCategory =  validateService.validatePostCategory(category);
         ResponseState responseState = postCategory.equals(PostCategory.service)? ResponseState.onGoing : null;
         Post savedPost = postRepository.save(request.toEntity(user,festival,postCategory,responseState));

@@ -25,4 +25,5 @@ public interface FestivalRepository extends JpaRepository<Festival,Integer>{
     //Page<Festival> findByKeyWordContaining(String Search, Pageable pageable);
 */
 
+    Optional<Festival> findByFestivalName(String festivalName);
 }
