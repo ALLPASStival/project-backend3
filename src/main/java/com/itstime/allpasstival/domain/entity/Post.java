@@ -3,15 +3,12 @@ package com.itstime.allpasstival.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.itstime.allpasstival.enums.PostCategory;
 import com.itstime.allpasstival.enums.ResponseState;
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +28,7 @@ public class Post extends BaseEntity {
     private String imageUrl;
     @Enumerated(EnumType.STRING)
     private PostCategory category;
+    private Long likes;
 
     @Enumerated(EnumType.STRING)
     private ResponseState state;
@@ -52,5 +50,8 @@ public class Post extends BaseEntity {
 
     public void changeState(ResponseState responseState){
         this.state = responseState;
+    }
+    public void changeLike(Long like){
+        this.likes =like;
     }
 }

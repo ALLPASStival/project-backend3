@@ -24,11 +24,13 @@ import java.util.function.Function;
 public class PostService {
     private final PostRepository postRepository;
     private final ValidateService validateService;
+    private final LikedPostService likedPostService;
 
     //게시글 단건조회
     public PostInfoResponse getPost(Integer id){
        Post post = validateService.validatePost(id);
-        return PostInfoResponse.of(post);
+       Long like = likedPostService.countLike(post.getPostId());
+       return PostInfoResponse.of(post);
     }
 
     //게시글 전체 조회

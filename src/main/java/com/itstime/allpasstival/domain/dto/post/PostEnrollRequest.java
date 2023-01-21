@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.java.Log;
 
 @Builder
 @AllArgsConstructor
@@ -27,6 +28,7 @@ public class PostEnrollRequest {
                 .imageUrl(this.imageUrl)
                 .title(this.title)
                 .user(user)
+                .likes(Long.parseLong("0"))
                 .festival(festival)
                 .build();
     }
