@@ -9,6 +9,7 @@ import com.itstime.allpasstival.repository.FestivalRepository;
 import com.itstime.allpasstival.repository.RecentlyViewedFestivalRepository;
 import com.itstime.allpasstival.repository.ReservedFestivalRepository;
 import com.itstime.allpasstival.utils.FestivalCSVParsing;
+import com.itstime.allpasstival.utils.GoogleImageSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -40,6 +44,11 @@ public class FestivalService {
                 System.out.print(" ");
                 System.out.println(a);
             }
+            Map imageSearch =GoogleImageSearch.imageSearch(line[0]);
+            ArrayList list = (ArrayList) imageSearch.get("items");
+            LinkedHashMap linkedHashMap = (LinkedHashMap) list.get(0);
+            String url = (String) linkedHashMap.get("link");
+            System.out.println(url);
             Festival festival = Festival.builder()
                     .festivalName(line[0])
                     .holdingVenue(line[1])
@@ -48,7 +57,8 @@ public class FestivalService {
                     .content(line[4])
                     .hostOrg(line[5])
                     .hostInst(line[6])
-                    .telNum(line[8])
+                    .etc(url)
+                    .telNum(line[7])
                     .homepAddr(line[9])
                     .streetAddr(line[11])
                     .latitude(line[13])
@@ -88,6 +98,8 @@ public class FestivalService {
     //리스트에서 게시글 세부조회. 게시글의 id를 받아와서 반환
     public FestivalDetailResponse viewDetail(Integer id){
         Festival festival = festivalRepository.findById(id).get();
+        // 구글 검색 api 이용시 리턴되는 형식에 따라 이미지 링크 뽑아냄
+        //System.out.println(linkedHashMap.get("link"));
         return FestivalDetailResponse.builder().
                 holdingVenue(festival.getHoldingVenue()).
                 hostInst(festival.getHostInst()).

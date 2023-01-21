@@ -33,6 +33,7 @@ public class Festival extends BaseEntity{
     private String homepAddr;//홈페이지 주소 VARCHAR
     private String streetAddr;//도로명 주소 VARCHAR
     private Integer view;//조회수
+    @Column(columnDefinition = "TEXT")
     private String etc;//비고TEXT
     private String author;
     private String latitude; //위도
