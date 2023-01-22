@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,16 +36,23 @@ public class FestivalApiController {
     //글 작성처리
     @PostMapping("")
     public Response<FestivalSaveResponseDto> saveFestival(@RequestBody FestivalSaveRequestDto requestDto){
-        FestivalSaveResponseDto saveResponse = festivalService.save(requestDto);
+        FestivalSaveResponseDto saveResponse = festivalService.festivalSave(requestDto);
         return Response.success(saveResponse);
     }
 
     //게시글 수정기능
     @PutMapping("/{id}")
-    public Response<FestivalUpdateResponseDto> modifyfestival(@PathVariable Integer id, @RequestBody  FestivalUpdateRequestDto updateRequest){
-        FestivalUpdateResponseDto festivalModifyResponse = festivalService.modifyfestival(id, updateRequest);
+    public Response<FestivalUpdateResponseDto> modifyfestival(@PathVariable Integer id, @RequestBody FestivalUpdateRequestDto updateRequest){
+        FestivalUpdateResponseDto festivalModifyResponse = festivalService.modifyFestival(id, updateRequest);
         return Response.success(festivalModifyResponse);
 
+    }
+
+    //게시글 검색기능
+    @GetMapping("/searching")
+    public Response<Page<FestivalDetailResponse>> festivalSearch(@PageableDefault(size = 20,sort="startDate",direction = Sort.Direction.DESC) Pageable pageable,@RequestParam String keyWord){
+        Page<FestivalDetailResponse> searchingFestival = festivalService.festivalSearch(keyWord, pageable);
+        return Response.success(searchingFestival);
     }
 
     //축제글 세부 조회.
