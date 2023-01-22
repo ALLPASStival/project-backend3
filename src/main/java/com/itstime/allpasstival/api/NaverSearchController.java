@@ -30,6 +30,8 @@ public class NaverSearchController {
     public static String getImage(String keyword) throws UnsupportedEncodingException {
         Map imageSearch =callApi(keyword);
         ArrayList list = (ArrayList) imageSearch.get("items");
+        if(list.isEmpty())
+            return null;
         LinkedHashMap linkedHashMap = (LinkedHashMap) list.get(0);
         return (String) linkedHashMap.get("link");
 
