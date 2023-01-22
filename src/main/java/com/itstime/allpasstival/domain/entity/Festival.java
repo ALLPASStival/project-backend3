@@ -2,12 +2,10 @@ package com.itstime.allpasstival.domain.entity;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +36,7 @@ public class Festival extends BaseEntity{
     private String author;
     private String latitude; //위도
     private String longitude; //경도
-
-
-    public static Festival of(ReservedFestival reservedFestival) {
-
-        return reservedFestival.getFestival();
-    }
-    public static Festival of(RecentlyViewedFestival recentlyViewedFestival) {
-        return recentlyViewedFestival.getFestival();
-    }
+    private Long likes=Long.parseLong("0"); //좋아요수
 
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -56,6 +46,18 @@ public class Festival extends BaseEntity{
     List<RecentlyViewedFestival> recentlyViewedFestivals = new ArrayList<>();
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    List<FestivalLiked> likedFestivals  = new ArrayList<>();
+    List<LikedFestival> likedFestivals  = new ArrayList<>();
+
+    public void changeLike(Long likes){
+        this.likes=likes;
+    }
+
+    public static Festival of(ReservedFestival reservedFestival) {
+
+        return reservedFestival.getFestival();
+    }
+    public static Festival of(RecentlyViewedFestival recentlyViewedFestival) {
+        return recentlyViewedFestival.getFestival();
+    }
 
 }

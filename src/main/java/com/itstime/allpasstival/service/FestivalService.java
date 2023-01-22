@@ -1,10 +1,10 @@
 package com.itstime.allpasstival.service;
 
 
+import com.itstime.allpasstival.api.NaverSearchController;
 import com.itstime.allpasstival.domain.dto.festival.*;
-import com.itstime.allpasstival.domain.dto.post.PostDeleteResponse;
 import com.itstime.allpasstival.domain.entity.*;
-import com.itstime.allpasstival.repository.FestivalLikedRepository;
+import com.itstime.allpasstival.repository.LikedFestivalRepository;
 import com.itstime.allpasstival.repository.FestivalRepository;
 import com.itstime.allpasstival.repository.RecentlyViewedFestivalRepository;
 import com.itstime.allpasstival.repository.ReservedFestivalRepository;
@@ -32,8 +32,9 @@ public class FestivalService {
 
     private final RecentlyViewedFestivalRepository recentlyViewedFestivalRepository;
 
-    private final FestivalLikedRepository festivalLikedRepository;
+    private final LikedFestivalRepository likedFestivalRepository;
 
+    //축제 초기 데이터 넣기
     public void addFestival() throws IOException {
         FestivalCSVParsing festivalCSVParsing = new FestivalCSVParsing("C:\\Users\\HeongJi\\Downloads\\test.txt");
         String[] line=null;
@@ -44,10 +45,14 @@ public class FestivalService {
                 System.out.print(" ");
                 System.out.println(a);
             }
-            Map imageSearch =GoogleImageSearch.imageSearch(line[0]);
-            ArrayList list = (ArrayList) imageSearch.get("items");
-            LinkedHashMap linkedHashMap = (LinkedHashMap) list.get(0);
-            String url = (String) linkedHashMap.get("link");
+            String url = null;
+            //구글 검색 api
+//            Map imageSearch =GoogleImageSearch.imageSearch(line[0]);
+//            ArrayList list = (ArrayList) imageSearch.get("items");
+//            LinkedHashMap linkedHashMap = (LinkedHashMap) list.get(0);
+//            url = (String) linkedHashMap.get("link");
+            //네이버 검색 api
+            url = NaverSearchController.getImage(line[0]);
             System.out.println(url);
             Festival festival = Festival.builder()
                     .festivalName(line[0])
@@ -63,6 +68,7 @@ public class FestivalService {
                     .streetAddr(line[11])
                     .latitude(line[13])
                     .longitude(line[14])
+                    .likes(Long.parseLong("0"))
                     .build();
             festivalRepository.save(festival);
             System.out.println();
@@ -95,25 +101,10 @@ public class FestivalService {
 
 
 
-    //리스트에서 게시글 세부조회. 게시글의 id를 받아와서 반환
+    //축제 단건 조회
     public FestivalDetailResponse viewDetail(Integer id){
-        Festival festival = festivalRepository.findById(id).get();
-        // 구글 검색 api 이용시 리턴되는 형식에 따라 이미지 링크 뽑아냄
-        //System.out.println(linkedHashMap.get("link"));
-        return FestivalDetailResponse.builder().
-                holdingVenue(festival.getHoldingVenue()).
-                hostInst(festival.getHostInst()).
-                telNum(festival.getTelNum()).
-                festivalName(festival.getFestivalName()).
-                hostOrg(festival.getHostOrg()).
-                etc(festival.getEtc()).
-                view(festival.getView()).
-                finishDate(festival.getFinishDate()).
-                startDate(festival.getStartDate()).
-                homepAddr(festival.getHomepAddr()).
-                streetAddr(festival.getStreetAddr()).
-                author(festival.getAuthor()).
-                build();
+        Festival festival = validateService.validateFestival(id);
+        return FestivalDetailResponse.of(festival);
     }
 
     //검색기능
@@ -181,28 +172,34 @@ public class FestivalService {
     }
 
 
-    public FestivalLikedResponse upDate(Integer id,String userId){
+    //좋아요 누르기/취소
+    public FestivalLikedResponse updateLike(Integer id,String userId){
         User user = validateService.validateUser(userId);
         Festival festival = validateService.validateFestival(id);
-        Optional<FestivalLiked> festivalLiked = festivalLikedRepository.findByFestivalAndUser(festival,user);
-        if(festivalLiked.isPresent()){
-            validateService.validatePermission(festivalLiked.get().getUser(),user);
-            festivalLikedRepository.delete(festivalLiked.get());
+        Optional<LikedFestival> likedFestival = likedFestivalRepository.findByFestivalAndUser(festival,user);
+        if(likedFestival.isPresent()){
+            validateService.validatePermission(likedFestival.get().getUser(),user);
+            likedFestivalRepository.delete(likedFestival.get());
+            festival.changeLike(festival.getLikes()-1);
+            festivalRepository.save(festival);
+            System.out.println("dd");
             return FestivalLikedResponse.builder()
                     .message("좋아요를 삭제했습니다.")
                     .build();
         }
         else{
-            festivalLikedRepository.save(FestivalLiked.of(festival,user));
+            likedFestivalRepository.save(LikedFestival.of(festival,user));
+            festival.changeLike(festival.getLikes()+1);
+            festivalRepository.save(festival);
             return FestivalLikedResponse.builder()
                     .message("좋아요를 눌렀습니다.")
                     .build();
         }
-    }//서비스 계층 : 유저정보있는지 확인, 그리고 포스트 정보도 있는지 확인. 레포지토리 인터페이스에 JPA 상속받아서 생긴 기능으로
-    //만약 눌려있다면-> delete()함수로 좋아요를 지우고,
+    }
 
-    public Long cntLike(Integer id){;
-        return festivalLikedRepository.countAllByFestivalId(id);
+    public Long cntLike(Integer id){
+        Festival festival = validateService.validateFestival(id);
+        return likedFestivalRepository.countAllByFestivalId(id);
     }
 
 }

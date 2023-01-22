@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FestivalLiked {
+public class LikedFestival {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -27,8 +27,8 @@ public class FestivalLiked {
     @JsonIgnore
     private Festival festival;
 
-    public static FestivalLiked of(Festival festival, User user){
-        return FestivalLiked.builder()
+    public static LikedFestival of(Festival festival, User user){
+        return LikedFestival.builder()
                 .user(user)
                 .festival(festival)
                 .build();

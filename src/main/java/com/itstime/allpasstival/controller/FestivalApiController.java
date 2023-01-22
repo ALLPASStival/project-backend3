@@ -87,7 +87,7 @@ public class FestivalApiController {
     //좋아요 등록&취소
     @PostMapping("/{id}/likes")
     public Response<FestivalLikedResponse> AddLike(@PathVariable Integer id, Authentication authentication){
-        FestivalLikedResponse likeUpdateResponse = festivalService.upDate(id, authentication.getName());
+        FestivalLikedResponse likeUpdateResponse = festivalService.updateLike(id, authentication.getName());
         return Response.success(likeUpdateResponse);
     }
 

@@ -25,7 +25,6 @@ public class PostService {
     //게시글 단건조회
     public PostInfoResponse getPost(Integer id){
        Post post = validateService.validatePost(id);
-       Long like = likedPostService.countLike(post.getPostId());
        return PostInfoResponse.of(post);
     }
 
