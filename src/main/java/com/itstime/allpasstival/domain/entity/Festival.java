@@ -34,7 +34,7 @@ public class Festival extends BaseEntity{
     private String streetAddr;//도로명 주소 VARCHAR
     private Integer view;//조회수
     @Column(columnDefinition = "TEXT")
-    private String etc;//비고TEXT
+    private String etc;//축제 관련 이미지 url
     private String author;
     private String latitude; //위도
     private String longitude; //경도
