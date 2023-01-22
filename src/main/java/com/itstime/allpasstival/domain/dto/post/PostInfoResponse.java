@@ -20,6 +20,10 @@ public class PostInfoResponse {
     private String imageUrl;
     private String category;
     private String state;
+    private Long like;
+    private String userName;
+    private String festivalName;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd- hh:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd- hh:mm:ss", timezone = "Asia/Seoul")
@@ -31,7 +35,10 @@ public class PostInfoResponse {
                 .articleContent(post.getArticleContent())
                 .imageUrl(post.getImageUrl())
                 .category(post.getCategory().name())
+                .like(post.getLikes())
+                .userName(post.getUser().getNickname())
                 .state(post.getState()==null?null:post.getState().getState())
+                .festivalName(post.getFestival()==null?null:post.getFestival().getFestivalName())
                 .createdAt(post.getCreatedAt())
                 .lastModifiedAt(post.getLastModifiedAt())
                 .build();

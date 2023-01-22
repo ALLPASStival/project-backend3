@@ -18,7 +18,7 @@ public class PostEnrollRequest {
     private String title;
     private String articleContent;
     private String imageUrl;
-    private Integer festivalId;
+    private String festivalName;
     public Post toEntity(User user, Festival festival, PostCategory category, ResponseState responseState) {
         return Post.builder()
                 .articleContent(this.articleContent)
@@ -27,6 +27,7 @@ public class PostEnrollRequest {
                 .imageUrl(this.imageUrl)
                 .title(this.title)
                 .user(user)
+                .likes(Long.parseLong("0"))
                 .festival(festival)
                 .build();
     }

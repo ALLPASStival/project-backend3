@@ -39,7 +39,7 @@ public class PostController {
 
     //게시글 전체 조회
     @GetMapping("")
-    public Response<Page<PostInfoResponse>> getAllPosts(@PageableDefault(size = 20, sort ="createdAt",
+    public Response<Page<PostInfoResponse>> getAllPosts(@PageableDefault(size = 10, sort ="createdAt",
             direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String category) {
         Page<PostInfoResponse> posts = postService.getAllPosts(pageable, category);
         return Response.success(posts);
@@ -47,7 +47,7 @@ public class PostController {
 
     //게시글 검색
     @GetMapping("/search")
-    public Response<Page<PostInfoResponse>> searchPosts(@PageableDefault(size = 20, sort ="createdAt",
+    public Response<Page<PostInfoResponse>> searchPosts(@PageableDefault(size = 10, sort ="createdAt",
             direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String keyword, @RequestParam String searchCategory) {
         Page<PostInfoResponse> posts = postService.searchPosts(pageable, keyword, searchCategory);
         return Response.success(posts);

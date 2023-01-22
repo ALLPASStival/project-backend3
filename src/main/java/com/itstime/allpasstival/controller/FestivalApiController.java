@@ -15,6 +15,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("api/v1/festivals")
 @RequiredArgsConstructor
@@ -24,6 +26,12 @@ public class FestivalApiController {
     private final FestivalService festivalService ;
     private final LikedPostService likedPostService;
     private final ValidateService validateService;
+
+    @PostMapping("/add")
+    public String saveFestival() throws IOException {
+        festivalService.addFestival();
+        return "end";
+    }
 
     //글 작성처리
     @PostMapping("")
@@ -71,8 +79,8 @@ public class FestivalApiController {
     }
 
     //리스트
-    @GetMapping("/list")
-    public Response<Page<FestivalDetailResponse>> festivallist(@PageableDefault(size = 20, sort ="startDate",
+    @GetMapping("")
+    public Response<Page<FestivalDetailResponse>> festivalList(@PageableDefault(size = 10, sort ="startDate",
             direction = Sort.Direction.DESC)Pageable pageable){
         Page<FestivalDetailResponse> list = festivalService.festivalList(pageable);
         return Response.success(list);
@@ -87,7 +95,7 @@ public class FestivalApiController {
     //좋아요 등록&취소
     @PostMapping("/{id}/likes")
     public Response<FestivalLikedResponse> AddLike(@PathVariable Integer id, Authentication authentication){
-        FestivalLikedResponse likeUpdateResponse = festivalService.upDate(id, authentication.getName());
+        FestivalLikedResponse likeUpdateResponse = festivalService.updateLike(id, authentication.getName());
         return Response.success(likeUpdateResponse);
     }
 

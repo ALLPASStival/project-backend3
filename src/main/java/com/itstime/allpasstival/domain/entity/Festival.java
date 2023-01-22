@@ -2,13 +2,10 @@ package com.itstime.allpasstival.domain.entity;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.itstime.allpasstival.domain.dto.festival.FestivalLikedResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,29 +22,21 @@ public class Festival extends BaseEntity{
     private Integer festivalId;
     private String festivalName;//축제이름 VARCHAR
     private String holdingVenue;//개최장소 VARCHAR
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String startDate;//시작일시 DATE
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String finishDate;//종료일시 DATE
+    private String content; //축제 내용
     private String hostInst;//주최기관 VARCHAR
     private String hostOrg;//주관기관 VARCHAR
     private String telNum;//전화번호 VARCHAR
     private String homepAddr;//홈페이지 주소 VARCHAR
     private String streetAddr;//도로명 주소 VARCHAR
     private Integer view;//조회수
-    private String etc;//비고TEXT
+    @Column(columnDefinition = "TEXT")
+    private String etc;//축제 관련 이미지 url
     private String author;
-    private String letitude;
-    private String longitude;
-
-
-    public static Festival of(ReservedFestival reservedFestival) {
-
-        return reservedFestival.getFestival();
-    }
-    public static Festival of(RecentlyViewedFestival recentlyViewedFestival) {
-        return recentlyViewedFestival.getFestival();
-    }
+    private String latitude; //위도
+    private String longitude; //경도
+    private Long likes=Long.parseLong("0"); //좋아요수
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<ReservedFestival> reservedFestivals = new ArrayList<>();
@@ -56,6 +45,21 @@ public class Festival extends BaseEntity{
     List<RecentlyViewedFestival> recentlyViewedFestivals = new ArrayList<>();
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    List<FestivalLiked> likedFestivals  = new ArrayList<>();
+    List<LikedFestival> likedFestivals  = new ArrayList<>();
+
+    @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<Post> reviews  = new ArrayList<>();
+
+    public void changeLike(Long likes){
+        this.likes=likes;
+    }
+
+    public static Festival of(ReservedFestival reservedFestival) {
+
+        return reservedFestival.getFestival();
+    }
+    public static Festival of(RecentlyViewedFestival recentlyViewedFestival) {
+        return recentlyViewedFestival.getFestival();
+    }
 
 }

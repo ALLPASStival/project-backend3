@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Getter
 @Builder
 @NoArgsConstructor
@@ -25,7 +23,7 @@ public class FestivalUpdateRequestDto {
     private String streetAddr;//도로명 주소VARCHAR
     private String etc;//비고TEXT
     private String longitude;
-    private String letitude;
+    private String latitude;
 
     public Festival toEntity(Festival festival){
         return Festival.builder()
@@ -39,7 +37,7 @@ public class FestivalUpdateRequestDto {
                 .homepAddr(festival.getHomepAddr())
                 .streetAddr(festival.getStreetAddr())
                 .etc(festival.getEtc())
-                .letitude(festival.getLetitude())
+                .latitude(festival.getLatitude())
                 .longitude(festival.getLongitude())
                 .build();
     }

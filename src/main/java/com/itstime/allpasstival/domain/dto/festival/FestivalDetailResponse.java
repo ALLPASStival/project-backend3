@@ -21,6 +21,8 @@ public class FestivalDetailResponse {
     private Integer view;//조회수
     private String etc;//비고TEXT
     private String author;//작성자
+    private Long likes;
+    private Integer review;
 
     public static FestivalDetailResponse of(Festival festival) {
         return FestivalDetailResponse.builder().
@@ -32,9 +34,11 @@ public class FestivalDetailResponse {
                 etc(festival.getEtc()).
                 view(festival.getView()).
                 finishDate(festival.getFinishDate()).
+                likes(festival.getLikes()).
                 startDate(festival.getStartDate()).
                 homepAddr(festival.getHomepAddr()).
                 streetAddr(festival.getStreetAddr()).
+                review(festival.getReviews().size()).
                 author(festival.getAuthor()).
                 build();
     }

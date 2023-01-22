@@ -63,7 +63,7 @@ public class UserController {
 
     //내가 쓴 글 보기
     @GetMapping ("/my-posts")
-    public Response<Page<PostInfoResponse>> getMyPosts(@PageableDefault(size = 20, sort ="createdAt",
+    public Response<Page<PostInfoResponse>> getMyPosts(@PageableDefault(size = 10, sort ="createdAt",
             direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
         Page<PostInfoResponse> posts = postService.getMyPosts(pageable, authentication.getName());
         return Response.success(posts);
@@ -71,7 +71,7 @@ public class UserController {
 
     //내가 찜한 축제 보기
     @GetMapping("/my-reserved-festivals")
-    public Response<Page<FestivalDetailResponse>> getMyReservedFestival(@PageableDefault(size = 20, sort ="createdAt",
+    public Response<Page<FestivalDetailResponse>> getMyReservedFestival(@PageableDefault(size = 10, sort ="createdAt",
             direction = Sort.Direction.DESC)Pageable pageable, Authentication authentication){
         Page<FestivalDetailResponse> festivalDetailResponseDto = festivalService.getReservedFestival(pageable ,authentication.getName());
         return Response.success(festivalDetailResponseDto);
@@ -79,7 +79,7 @@ public class UserController {
 
     //최근 조회한 축제 보기
     @GetMapping ("/my-recently-viewed-festivals")
-    public Response<Page<FestivalDetailResponse>> getMyRecentlyViewedFestival(@PageableDefault(size = 12, sort ="createdAt",
+    public Response<Page<FestivalDetailResponse>> getMyRecentlyViewedFestival(@PageableDefault(size = 6, sort ="createdAt",
             direction = Sort.Direction.DESC)Pageable pageable, Authentication authentication){
         Page<FestivalDetailResponse> festivalDetailResponseDto = festivalService.getRecentlyViewedFestival(pageable ,authentication.getName());
         return Response.success(festivalDetailResponseDto);

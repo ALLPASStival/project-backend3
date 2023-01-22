@@ -37,9 +37,15 @@ public class ValidateService {
                 .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
     }
 
-    //축제 정보 유무 확인
+    //축제 정보 유무 확인 _ id로 검색
     public Festival validateFestival(Integer festivalId){
         return festivalRepository.findById(festivalId)
+                .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.FESTIVAL_NOT_FOUND, ErrorCode.FESTIVAL_NOT_FOUND.getMessage()));
+    }
+
+    //축제 정보 유무 확인 _ 이름으로 검색
+    public Festival validateFestival(String festivalName){
+        return festivalRepository.findByFestivalName(festivalName)
                 .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.FESTIVAL_NOT_FOUND, ErrorCode.FESTIVAL_NOT_FOUND.getMessage()));
     }
 
@@ -66,13 +72,13 @@ public class ValidateService {
     //권한 조회
     public void validatePermission(User author, User currentUser){
         if(!(currentUser.getUserId()==author.getUserId()||currentUser.isAdmin())){
-            throw new AllPasstivalAppException(ErrorCode.INVALID_PERMISSION,ErrorCode.INVALID_PASSWORD.getMessage());
+            throw new AllPasstivalAppException(ErrorCode.INVALID_PERMISSION,ErrorCode.INVALID_PERMISSION.getMessage());
         }
     }
 
     public void validateAdmin(User currentUser){
         if(!currentUser.isAdmin()){
-            throw new AllPasstivalAppException(ErrorCode.INVALID_PERMISSION,ErrorCode.INVALID_PASSWORD.getMessage());
+            throw new AllPasstivalAppException(ErrorCode.INVALID_PERMISSION,ErrorCode.INVALID_PERMISSION.getMessage());
         }
     }
 

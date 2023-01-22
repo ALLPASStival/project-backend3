@@ -22,7 +22,7 @@ public class FestivalSaveRequestDto {
     private String streetAddr;//도로명 주소VARCHAR
     private Integer view;//조회수
     private String etc;//비고TEXT
-    private String letitude;
+    private String latitude;
     private String longitude;
     private String author;
 
@@ -41,7 +41,7 @@ public class FestivalSaveRequestDto {
                 .view(view)
                 .etc(etc)
                 .longitude(longitude)
-                .letitude(letitude)
+                .latitude(latitude)
                 .author(author)//임의로 넣은거
                 .build();
     }
