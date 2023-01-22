@@ -48,6 +48,9 @@ public class Festival extends BaseEntity{
     @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<LikedFestival> likedFestivals  = new ArrayList<>();
 
+    @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<Post> reviews  = new ArrayList<>();
+
     public void changeLike(Long likes){
         this.likes=likes;
     }
