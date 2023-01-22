@@ -91,7 +91,13 @@ public class FestivalApiController {
         return Response.success(likeUpdateResponse);
     }
 
-    //월별 일정관리
+    //리스트
+    @GetMapping("/maps")
+    public Response<Page<FestivalMapResponse>> festivalMapList(@PageableDefault(size = 60, sort ="startDate",
+            direction = Sort.Direction.DESC)Pageable pageable){
+        Page<FestivalMapResponse> list = festivalService.festivalMapList(pageable);
+        return Response.success(list);
+    }
 
 
 

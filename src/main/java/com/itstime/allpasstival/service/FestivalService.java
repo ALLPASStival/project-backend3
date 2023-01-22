@@ -107,11 +107,6 @@ public class FestivalService {
         return FestivalDetailResponse.of(festival);
     }
 
-    //검색기능
-    ///public Page<Festival> festivalSearch(String keyWord, Pageable pageable){
-    /// return festivalRepository
-    //.findByKeyWordContaining(keyWord,pageable);
-    ///}
 
 
     //게시글 삭제하는거
@@ -202,4 +197,8 @@ public class FestivalService {
         return likedFestivalRepository.countAllByFestivalId(id);
     }
 
+    public Page<FestivalMapResponse> festivalMapList(Pageable pageable) {
+        Page<Festival> festivalPage = festivalRepository.findAll(pageable);
+        return festivalPage.map(FestivalMapResponse::of);
+    }
 }
