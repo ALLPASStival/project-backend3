@@ -38,7 +38,6 @@ public class Festival extends BaseEntity{
     private String longitude; //경도
     private Long likes=Long.parseLong("0"); //좋아요수
 
-
     @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<ReservedFestival> reservedFestivals = new ArrayList<>();
 

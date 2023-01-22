@@ -82,6 +82,7 @@ public class PostController {
         return Response.success(likeUpdateResponse);
     }
 
+
     //고객센터 답변상태 변경하기
     @PostMapping("/{id}/change-state")
     public Response<PostModifyResponse> changeState(@PathVariable Integer id, @RequestParam String state, Authentication authentication){
