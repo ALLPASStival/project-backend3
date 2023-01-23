@@ -11,16 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface FestivalRepository extends JpaRepository<Festival,Integer>{
-    Page<Festival> findAllByFestivalNameContaining(String keyWord, Pageable pageable);
-/*
-
-    static Optional<Festival>  findByid(int festivalID) {
-//        return null;
-//    }
-//
-    //검색기능 시작
-    //Page<Festival> findByKeyWordContaining(String Search, Pageable pageable);
-*/
-
+    Page<Festival> findAllByFestivalNameContaining(String keyword, Pageable pageable);
+    Page<Festival> findAllByContentContaining(String keyword, Pageable pageable);
+    Page<Festival> findAllByLikesGreaterThan(Long zero,Pageable pageable);
+    Page<Festival> findAllByReviewGreaterThan(Long zero,Pageable pageable);
     Optional<Festival> findByFestivalName(String festivalName);
 }

@@ -3,23 +3,22 @@ package com.itstime.allpasstival.service;
 
 import com.itstime.allpasstival.api.NaverSearchController;
 import com.itstime.allpasstival.domain.dto.festival.*;
+import com.itstime.allpasstival.domain.dto.post.PostInfoResponse;
 import com.itstime.allpasstival.domain.entity.*;
 import com.itstime.allpasstival.repository.LikedFestivalRepository;
 import com.itstime.allpasstival.repository.FestivalRepository;
 import com.itstime.allpasstival.repository.RecentlyViewedFestivalRepository;
 import com.itstime.allpasstival.repository.ReservedFestivalRepository;
 import com.itstime.allpasstival.utils.FestivalCSVParsing;
-import com.itstime.allpasstival.utils.GoogleImageSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -68,6 +67,7 @@ public class FestivalService {
                     .streetAddr(line[11])
                     .latitude(line[13])
                     .longitude(line[14])
+                    .review(Long.parseLong("0"))
                     .likes(Long.parseLong("0"))
                     .build();
             festivalRepository.save(festival);
@@ -81,39 +81,39 @@ public class FestivalService {
         Page<Festival> festivalPage = festivalRepository.findAll(pageable);
         return festivalPage.map(FestivalDetailResponse::of);
     }
-    public FestivalDetailResponse findById(Integer id) {
-        Festival festival = festivalRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 축제 내용이 없습니다"+id));
-        return FestivalDetailResponse.of(festival);
+
+    //축제 랭킹 조회(좋아요 순)
+    public Page<FestivalDetailResponse> festivalRankByLikes(Pageable pageable){
+        Page<Festival> festivalPage = festivalRepository.findAllByLikesGreaterThan(Long.parseLong("0"),pageable);
+        return festivalPage.map(FestivalDetailResponse::of);
     }
 
+    //축제 랭킹 조회(리뷰 순)
+    public Page<FestivalDetailResponse> festivalRankByReview(Pageable pageable){
+        Page<Festival> festivalPage = festivalRepository.findAllByReviewGreaterThan(Long.parseLong("0"),pageable);
+        return festivalPage.map(FestivalDetailResponse::of);
+    }
 
-    //글 작성
+    //축제 작성
     public FestivalSaveResponseDto festivalSave(FestivalSaveRequestDto requestDto) {
         Festival festival = festivalRepository.save(requestDto.toEntity());
         return FestivalSaveResponseDto.of(festival);
     }
-    //게시글 수정
+
+    //축제 수정
     public FestivalUpdateResponseDto modifyFestival(Integer id, FestivalUpdateRequestDto updateRequest){
         Festival festival = validateService.validateFestival(id);
         Festival modifiedFestival = festivalRepository.save(updateRequest.toEntity(festival));
         return FestivalUpdateResponseDto.of(modifiedFestival);
     }
 
-
     //축제 단건 조회
     public FestivalDetailResponse viewDetail(Integer id){
         Festival festival = validateService.validateFestival(id);
         return FestivalDetailResponse.of(festival);
     }
-    //검색기능
-    public Page<FestivalDetailResponse> festivalSearch(String keyWord, Pageable pageable){
-     Page<Festival> festival = festivalRepository.findAllByFestivalNameContaining(keyWord,pageable);
-     return festival.map(FestivalDetailResponse::of);
-    }
 
-
-    //게시글 삭제하는거
-    //게시글 아이디 받아서 삭제
+    //축제 삭제
     public FestivalDeleteResponse deleteFestival(Integer id){
         Festival festival = validateService.validateFestival(id);
         festivalRepository.deleteById(id);
@@ -200,4 +200,22 @@ public class FestivalService {
         return likedFestivalRepository.countAllByFestivalId(id);
     }
 
+    public Page<FestivalMapResponse> festivalMapList(Pageable pageable) {
+        Page<Festival> festivalPage = festivalRepository.findAll(pageable);
+        return festivalPage.map(FestivalMapResponse::of);
+    }
+
+    //축제 검색
+    public Page<FestivalDetailResponse> searchFestival(Pageable pageable, String keyword, String searchCategory) {
+        Page<Festival> festivalPage = new PageImpl<>(new ArrayList<>());
+        switch (searchCategory) {
+            case "content":
+                festivalPage = festivalRepository.findAllByContentContaining(keyword,pageable);
+                break;
+            case "title":
+                festivalPage = festivalRepository.findAllByFestivalNameContaining(keyword,pageable);
+                break;
+        }
+        return festivalPage.map(FestivalDetailResponse::of);
+    }
 }

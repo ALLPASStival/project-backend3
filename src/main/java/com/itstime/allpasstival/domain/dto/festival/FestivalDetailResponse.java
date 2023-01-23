@@ -18,11 +18,12 @@ public class FestivalDetailResponse {
     private String telNum;//전화번호VARCHAR
     private String homepAddr;//홈페이지 주소VARCHAR
     private String streetAddr;//도로명 주소VARCHAR
+    private String content; //축제 내용
     private Integer view;//조회수
     private String etc;//비고TEXT
     private String author;//작성자
     private Long likes;
-    private Integer review;
+    private Long review;
 
     public static FestivalDetailResponse of(Festival festival) {
         return FestivalDetailResponse.builder().
@@ -38,7 +39,8 @@ public class FestivalDetailResponse {
                 startDate(festival.getStartDate()).
                 homepAddr(festival.getHomepAddr()).
                 streetAddr(festival.getStreetAddr()).
-                review(festival.getReviews().size()).
+                content(festival.getContent()).
+                review(festival.getReview()).
                 author(festival.getAuthor()).
                 build();
     }
