@@ -81,11 +81,11 @@ public class FestivalService {
         Page<Festival> festivalPage = festivalRepository.findAll(pageable);
         return festivalPage.map(FestivalDetailResponse::of);
     }
-    public FestivalDetailResponse findById(Integer id) {
-        Festival festival = festivalRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 축제 내용이 없습니다"+id));
-        return FestivalDetailResponse.of(festival);
-    }
 
+    public Page<FestivalDetailResponse> festivalRank(Pageable pageable){
+        Page<Festival> festivalPage = festivalRepository.findAllByLikesGreaterThan(Long.parseLong("0"),pageable);
+        return festivalPage.map(FestivalDetailResponse::of);
+    }
 
     //글 작성
     public FestivalSaveResponseDto festivalSave(FestivalSaveRequestDto requestDto) {

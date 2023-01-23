@@ -99,7 +99,7 @@ public class FestivalApiController {
         return Response.success(likeUpdateResponse);
     }
 
-    //리스트
+    //지도에 표시하기
     @GetMapping("/maps")
     public Response<Page<FestivalMapResponse>> festivalMapList(@PageableDefault(size = 60, sort ="startDate",
             direction = Sort.Direction.DESC)Pageable pageable){
@@ -107,6 +107,12 @@ public class FestivalApiController {
         return Response.success(list);
     }
 
-
+    // 축제 순위
+    @GetMapping("/ranks")
+    public Response<Page<FestivalDetailResponse>> festivalRank(@PageableDefault(size = 4, sort ="likes",
+            direction = Sort.Direction.DESC)Pageable pageable){
+        Page<FestivalDetailResponse> list = festivalService.festivalRank(pageable);
+        return Response.success(list);
+    }
 
 }
