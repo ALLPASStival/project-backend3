@@ -225,4 +225,10 @@ public class FestivalService {
         Page<Festival> festivalPage = festivalRepository.findAllByStartDateStartsWith(year+"-"+month,pageable);
         return festivalPage.map(FestivalDetailResponse::of);
     }
+
+    //축제 카테고리별 조회
+    public Page<FestivalDetailResponse> searchFestivalByCategory(Pageable pageable, String category, String region, String month) {
+        Page<Festival> festivalPage = festivalRepository.findAllByStreetAddrStartingWithAndContentContainingAndStartDateContaining(region,category,"-"+month+"-",pageable);
+        return festivalPage.map(FestivalDetailResponse::of);
+    }
 }

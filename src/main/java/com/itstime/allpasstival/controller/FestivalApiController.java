@@ -124,11 +124,20 @@ public class FestivalApiController {
         return Response.success(list);
     }
 
+    //축제 일정으로 검색
     @GetMapping("/calender")
     public Response<Page<FestivalDetailResponse>> getFestivalByCalender(@PageableDefault(size = 10, sort ="startDate",
             direction = Sort.Direction.DESC)Pageable pageable, @RequestParam String year, @RequestParam String month){
         Page<FestivalDetailResponse> list = festivalService.getFestivalByCalender(year,month,pageable);
         return Response.success(list);
+    }
+
+    //축제 검색
+    @GetMapping("/search-with-categorys")
+    public Response<Page<FestivalDetailResponse>> searchFestivalByCategory(@PageableDefault(size = 10, sort ="startDate",
+            direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String category, @RequestParam String region, @RequestParam String month) {
+        Page<FestivalDetailResponse> festivalDetailResponses = festivalService.searchFestivalByCategory(pageable, category, region, month);
+        return Response.success(festivalDetailResponses);
     }
 
 }
