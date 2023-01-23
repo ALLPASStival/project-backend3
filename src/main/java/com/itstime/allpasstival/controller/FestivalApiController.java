@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +24,6 @@ import java.io.IOException;
 public class FestivalApiController {
 
     private final FestivalService festivalService ;
-    private final LikedPostService likedPostService;
-    private final ValidateService validateService;
 
     //축제 초기 데이터 넣기
     @PostMapping("/add")
@@ -124,6 +121,13 @@ public class FestivalApiController {
     public Response<Page<FestivalDetailResponse>> festivalRankByReview(@PageableDefault(size = 4, sort ="review",
             direction = Sort.Direction.DESC)Pageable pageable){
         Page<FestivalDetailResponse> list = festivalService.festivalRankByReview(pageable);
+        return Response.success(list);
+    }
+
+    @GetMapping("/calender")
+    public Response<Page<FestivalDetailResponse>> getFestivalByCalender(@PageableDefault(size = 10, sort ="startDate",
+            direction = Sort.Direction.DESC)Pageable pageable, @RequestParam String year, @RequestParam String month){
+        Page<FestivalDetailResponse> list = festivalService.getFestivalByCalender(year,month,pageable);
         return Response.success(list);
     }
 

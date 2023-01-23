@@ -200,6 +200,7 @@ public class FestivalService {
         return likedFestivalRepository.countAllByFestivalId(id);
     }
 
+    //축제 지도 조회
     public Page<FestivalMapResponse> festivalMapList(Pageable pageable) {
         Page<Festival> festivalPage = festivalRepository.findAll(pageable);
         return festivalPage.map(FestivalMapResponse::of);
@@ -216,6 +217,12 @@ public class FestivalService {
                 festivalPage = festivalRepository.findAllByFestivalNameContaining(keyword,pageable);
                 break;
         }
+        return festivalPage.map(FestivalDetailResponse::of);
+    }
+
+    //축제 일정으로 조회
+    public Page<FestivalDetailResponse> getFestivalByCalender(String year, String month, Pageable pageable) {
+        Page<Festival> festivalPage = festivalRepository.findAllByStartDateStartsWith(year+"-"+month,pageable);
         return festivalPage.map(FestivalDetailResponse::of);
     }
 }
