@@ -1,10 +1,7 @@
 package com.itstime.allpasstival.controller;
 
 import com.itstime.allpasstival.domain.dto.*;
-import com.itstime.allpasstival.domain.dto.auth.JoinRequest;
-import com.itstime.allpasstival.domain.dto.auth.JoinResponse;
-import com.itstime.allpasstival.domain.dto.auth.LogoutRequest;
-import com.itstime.allpasstival.domain.dto.auth.LogoutResponse;
+import com.itstime.allpasstival.domain.dto.auth.*;
 import com.itstime.allpasstival.domain.dto.user.UserDto;
 import com.itstime.allpasstival.domain.dto.user.UserLoginRequest;
 import com.itstime.allpasstival.domain.dto.user.UserLoginResponse;
@@ -36,8 +33,14 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public Response<LogoutResponse> logout(@RequestBody LogoutRequest logoutRequest){
-        LogoutResponse logoutResponse = userService.logout(logoutRequest);
+    public Response<LogoutResponse> logout(@RequestBody LogoutRequest logoutRequest, Authentication authentication){
+        LogoutResponse logoutResponse = userService.logout(logoutRequest, authentication.getName());
         return Response.success(logoutResponse);
+    }
+
+    @PostMapping("/reset-password")
+    public Response<ResetPasswordResponse> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest){
+        ResetPasswordResponse resetPasswordResponse = userService.resetPassword(resetPasswordRequest);
+        return Response.success(resetPasswordResponse);
     }
 }
