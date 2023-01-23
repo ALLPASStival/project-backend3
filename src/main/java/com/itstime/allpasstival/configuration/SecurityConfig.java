@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,6 +27,7 @@ public class SecurityConfig {
     private String secretKey;
 
     private final UserRepository userRepository;
+    private final RedisTemplate<String,String> redisTemplate;
 
     private String[] SWAGGER = {
             /* swagger v2 */
@@ -47,7 +50,7 @@ public class SecurityConfig {
                 .cors().and()
                 .authorizeRequests()
                 .antMatchers(SWAGGER).permitAll()
-                .antMatchers("/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/users/nickname-exists/**", "/api/v1/users/email-exists/**").permitAll() // join, login은 언제나 가능
+                .antMatchers("/api/v1/auth/register", "/api/v1/auth/login","/api/v1/auth/reset-password", "/api/v1/users/nickname-exists/**", "/api/v1/users/email-exists/**").permitAll() // join, login은 언제나 가능
                 .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()
@@ -60,7 +63,7 @@ public class SecurityConfig {
                 .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
-                .addFilterBefore(new JwtTokenFilter(secretKey,userRepository), UsernamePasswordAuthenticationFilter.class) //UserNamePasswordAuthenticationFilter적용하기 전에 JWTTokenFilter를 적용 하라는 뜻
+                .addFilterBefore(new JwtTokenFilter(secretKey,userRepository,redisTemplate), UsernamePasswordAuthenticationFilter.class) //UserNamePasswordAuthenticationFilter적용하기 전에 JWTTokenFilter를 적용 하라는 뜻
                 .build();
     }
 }

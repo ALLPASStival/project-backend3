@@ -1,17 +1,28 @@
 package com.itstime.allpasstival.service;
 
 
-import com.itstime.allpasstival.domain.dto.auth.JoinRequest;
+import com.itstime.allpasstival.configuration.JwtTokenFilter;
+import com.itstime.allpasstival.domain.dto.auth.*;
 import com.itstime.allpasstival.domain.dto.user.*;
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.exception.AllPasstivalAppException;
 import com.itstime.allpasstival.exception.ErrorCode;
 import com.itstime.allpasstival.repository.UserRepository;
 import com.itstime.allpasstival.utils.JwtTokenUtil;
+import com.itstime.allpasstival.utils.MakePassword;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +30,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final ValidateService validateService;
+    private final RedisTemplate<String,String> redisTemplate;
+    private final MailSender mailSender;
 
 
     @Value("${jwt.token.secret}")
@@ -63,8 +76,13 @@ public class UserService {
         if(!encoder.matches(password,user.getPassword())){
             throw new AllPasstivalAppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
         }
-
         return JwtTokenUtil.createToken(user.getUserId(), secretKey, expireTimeMs);
+    }
+
+    public LogoutResponse logout(LogoutRequest logoutRequest, String userId){
+        validateService.validateUser(userId);
+        redisTemplate.opsForValue().set(logoutRequest.getJwt(),"logout",expireTimeMs,TimeUnit.MILLISECONDS);
+        return new LogoutResponse("로그아웃 성공");
     }
 
     //유저id로 유저 정보 조회
@@ -120,5 +138,28 @@ public class UserService {
         User user = validateService.validateUser(userId);
         userRepository.deleteById(user.getUserId());
         return UserDeleteResponse.of(user);
+    }
+
+    @Transactional
+    public ResetPasswordResponse resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        String password = MakePassword.getTempPassword();
+        User user = userRepository.findByEmail(resetPasswordRequest.getEmail())
+                .orElseThrow(()-> new AllPasstivalAppException(ErrorCode.NOT_FOUND, ErrorCode.NOT_FOUND.getMessage()));
+        user.setPassword(encoder.encode(password));
+        userRepository.save(user);
+        ResetPasswordResponse resetPasswordResponse = ResetPasswordResponse.builder()
+                .message("AllPasstival 임시 비밀번호 발급 이메일입니다. 임시 비밀번호는 "+password+ " 입니다.")
+                .title("AllPasstival 임시 비빌번호 발급")
+                .email(user.getEmail())
+                .build();
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(resetPasswordResponse.getEmail());
+        message.setSubject(resetPasswordResponse.getTitle());
+        message.setText(resetPasswordResponse.getMessage());
+        message.setFrom("allpasstival@gmail.com");
+        message.setReplyTo("allpasstival@gmail.com");
+        System.out.println("message"+message);
+        mailSender.send(message);
+        return resetPasswordResponse;
     }
 }

@@ -23,7 +23,7 @@ public class FestivalMapResponse {
         String fullPlace = festival.getStreetAddr();
         String place="";
         String detailPlace="";
-        System.out.println(fullPlace);
+//        System.out.println(fullPlace);
         if(!fullPlace.isEmpty()){
             String[] split = fullPlace.split(" ");
             place = split[0]+" "+ split[1];

@@ -20,6 +20,20 @@ spring:
       jdbc:
         time_zone: Asia/Seoul
       ddl-auto: update
+  redis:
+    host: localhost
+    port: 6379
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${email}
+    password: ${password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 jwt:
   token:
     secret: ${TOKEN_SECRET}
