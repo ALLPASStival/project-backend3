@@ -37,6 +37,7 @@ public class PostService {
         return postPages.map(PostInfoResponse::of);
     }
 
+    //게시글 검색
     public Page<PostInfoResponse> searchPosts(Pageable pageable, String keyword, String searchCategory){
         Page<Post> postPages = new PageImpl<>(new ArrayList<>());
         switch (searchCategory) {
@@ -100,12 +101,12 @@ public class PostService {
         return postPages.map(PostInfoResponse::of);
     }
 
+    //고객센터 답변 상태 변경하기
     public PostModifyResponse changeState(Integer postId, String state,  String userId) {
         Post post = validateService.validatePost(postId);
         User user = validateService.validateUser(userId);
         validateService.validateAdmin(user);
         ResponseState responseState = validateService.validateState(state);
-        System.out.println(responseState.getState());
         post.changeState(responseState);
         postRepository.save(post);
         return PostModifyResponse.of(post);

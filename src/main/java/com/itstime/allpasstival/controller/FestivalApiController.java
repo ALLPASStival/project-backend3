@@ -2,6 +2,7 @@ package com.itstime.allpasstival.controller;
 
 import com.itstime.allpasstival.domain.dto.Response;
 import com.itstime.allpasstival.domain.dto.festival.*;
+import com.itstime.allpasstival.domain.dto.post.PostInfoResponse;
 import com.itstime.allpasstival.service.FestivalService;
 import com.itstime.allpasstival.service.LikedPostService;
 import com.itstime.allpasstival.service.ValidateService;
@@ -27,6 +28,7 @@ public class FestivalApiController {
     private final LikedPostService likedPostService;
     private final ValidateService validateService;
 
+    //축제 초기 데이터 넣기
     @PostMapping("/add")
     public String saveFestival() throws IOException {
         festivalService.addFestival();
@@ -42,17 +44,19 @@ public class FestivalApiController {
 
     //게시글 수정기능
     @PutMapping("/{id}")
-    public Response<FestivalUpdateResponseDto> modifyfestival(@PathVariable Integer id, @RequestBody FestivalUpdateRequestDto updateRequest){
+    public Response<FestivalUpdateResponseDto> modifyFestival(@PathVariable Integer id, @RequestBody FestivalUpdateRequestDto updateRequest){
         FestivalUpdateResponseDto festivalModifyResponse = festivalService.modifyFestival(id, updateRequest);
         return Response.success(festivalModifyResponse);
 
     }
 
-    //게시글 검색기능
-    @GetMapping("/searching")
-    public Response<Page<FestivalDetailResponse>> festivalSearch(@PageableDefault(size = 20,sort="startDate",direction = Sort.Direction.DESC) Pageable pageable,@RequestParam String keyWord){
-        Page<FestivalDetailResponse> searchingFestival = festivalService.festivalSearch(keyWord, pageable);
-        return Response.success(searchingFestival);
+
+    //축제 검색
+    @GetMapping("/search")
+    public Response<Page<FestivalDetailResponse>> searchFestivals(@PageableDefault(size = 10, sort ="likes",
+            direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String keyword, @RequestParam String searchCategory) {
+        Page<FestivalDetailResponse> festivalDetailResponses = festivalService.searchFestival(pageable, keyword, searchCategory);
+        return Response.success(festivalDetailResponses);
     }
 
     //축제글 세부 조회.
@@ -122,7 +126,5 @@ public class FestivalApiController {
         Page<FestivalDetailResponse> list = festivalService.festivalRankByReview(pageable);
         return Response.success(list);
     }
-
-
 
 }

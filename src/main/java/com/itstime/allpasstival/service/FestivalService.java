@@ -3,6 +3,7 @@ package com.itstime.allpasstival.service;
 
 import com.itstime.allpasstival.api.NaverSearchController;
 import com.itstime.allpasstival.domain.dto.festival.*;
+import com.itstime.allpasstival.domain.dto.post.PostInfoResponse;
 import com.itstime.allpasstival.domain.entity.*;
 import com.itstime.allpasstival.repository.LikedFestivalRepository;
 import com.itstime.allpasstival.repository.FestivalRepository;
@@ -11,11 +12,13 @@ import com.itstime.allpasstival.repository.ReservedFestivalRepository;
 import com.itstime.allpasstival.utils.FestivalCSVParsing;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -110,13 +113,7 @@ public class FestivalService {
         return FestivalDetailResponse.of(festival);
     }
 
-    //검색기능
-    public Page<FestivalDetailResponse> festivalSearch(String keyWord, Pageable pageable){
-     Page<Festival> festival = festivalRepository.findAllByFestivalNameContaining(keyWord,pageable);
-     return festival.map(FestivalDetailResponse::of);
-    }
-
-
+    //축제 삭제
     public FestivalDeleteResponse deleteFestival(Integer id){
         Festival festival = validateService.validateFestival(id);
         festivalRepository.deleteById(id);
@@ -206,5 +203,19 @@ public class FestivalService {
     public Page<FestivalMapResponse> festivalMapList(Pageable pageable) {
         Page<Festival> festivalPage = festivalRepository.findAll(pageable);
         return festivalPage.map(FestivalMapResponse::of);
+    }
+
+    //축제 검색
+    public Page<FestivalDetailResponse> searchFestival(Pageable pageable, String keyword, String searchCategory) {
+        Page<Festival> festivalPage = new PageImpl<>(new ArrayList<>());
+        switch (searchCategory) {
+            case "content":
+                festivalPage = festivalRepository.findAllByContentContaining(keyword,pageable);
+                break;
+            case "title":
+                festivalPage = festivalRepository.findAllByFestivalNameContaining(keyword,pageable);
+                break;
+        }
+        return festivalPage.map(FestivalDetailResponse::of);
     }
 }
