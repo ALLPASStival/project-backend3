@@ -36,7 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public Response<LogoutResponse> login(@RequestBody LogoutRequest logoutRequest){
+    public Response<LogoutResponse> logout(@RequestBody LogoutRequest logoutRequest){
         LogoutResponse logoutResponse = userService.logout(logoutRequest);
         return Response.success(logoutResponse);
     }
