@@ -180,7 +180,6 @@ public class FestivalService {
             likedFestivalRepository.delete(likedFestival.get());
             festival.changeLike(festival.getLikes()-1);
             festivalRepository.save(festival);
-            System.out.println("dd");
             return FestivalLikedResponse.builder()
                     .message("좋아요를 삭제했습니다.")
                     .build();

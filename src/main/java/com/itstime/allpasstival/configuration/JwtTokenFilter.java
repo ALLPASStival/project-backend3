@@ -7,11 +7,17 @@ import com.itstime.allpasstival.service.UserService;
 import com.itstime.allpasstival.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -27,6 +33,7 @@ import java.util.Optional;
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final String secretKey;
     private final UserRepository userRepository;
+    private final RedisTemplate<String,String> redisTemplate;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -63,6 +70,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         if(user.isEmpty()){
             request.setAttribute("exception", ErrorCode.USERNAME_NOT_FOUND);
+            filterChain.doFilter(request,response);
+            return;
+        }
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        String isLogout = valueOperations.get(token);
+        System.out.println(isLogout);
+        if (isLogout!=null) {
+            request.setAttribute("exception", ErrorCode.INVALID_TOKEN);
             filterChain.doFilter(request,response);
             return;
         }

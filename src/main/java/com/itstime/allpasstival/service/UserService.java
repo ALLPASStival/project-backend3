@@ -1,7 +1,10 @@
 package com.itstime.allpasstival.service;
 
 
+import com.itstime.allpasstival.configuration.JwtTokenFilter;
+import com.itstime.allpasstival.domain.dto.auth.LogoutRequest;
 import com.itstime.allpasstival.domain.dto.auth.JoinRequest;
+import com.itstime.allpasstival.domain.dto.auth.LogoutResponse;
 import com.itstime.allpasstival.domain.dto.user.*;
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.exception.AllPasstivalAppException;
@@ -10,8 +13,14 @@ import com.itstime.allpasstival.repository.UserRepository;
 import com.itstime.allpasstival.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final ValidateService validateService;
+    private final RedisTemplate<String,String> redisTemplate;
 
 
     @Value("${jwt.token.secret}")
@@ -63,8 +73,12 @@ public class UserService {
         if(!encoder.matches(password,user.getPassword())){
             throw new AllPasstivalAppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
         }
-
         return JwtTokenUtil.createToken(user.getUserId(), secretKey, expireTimeMs);
+    }
+
+    public LogoutResponse logout(LogoutRequest logoutRequest){
+        redisTemplate.opsForValue().set(logoutRequest.getJwt(),"logout",expireTimeMs,TimeUnit.MILLISECONDS);
+        return new LogoutResponse("로그아웃 성공");
     }
 
     //유저id로 유저 정보 조회

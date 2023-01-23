@@ -3,12 +3,15 @@ package com.itstime.allpasstival.controller;
 import com.itstime.allpasstival.domain.dto.*;
 import com.itstime.allpasstival.domain.dto.auth.JoinRequest;
 import com.itstime.allpasstival.domain.dto.auth.JoinResponse;
+import com.itstime.allpasstival.domain.dto.auth.LogoutRequest;
+import com.itstime.allpasstival.domain.dto.auth.LogoutResponse;
 import com.itstime.allpasstival.domain.dto.user.UserDto;
 import com.itstime.allpasstival.domain.dto.user.UserLoginRequest;
 import com.itstime.allpasstival.domain.dto.user.UserLoginResponse;
 import com.itstime.allpasstival.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,5 +33,11 @@ public class AuthController {
     public Response<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest){
         String token = userService.login(userLoginRequest.getEmail(),userLoginRequest.getPassword());
         return Response.success(new UserLoginResponse(token));
+    }
+
+    @PostMapping("/logout")
+    public Response<LogoutResponse> login(@RequestBody LogoutRequest logoutRequest){
+        LogoutResponse logoutResponse = userService.logout(logoutRequest);
+        return Response.success(logoutResponse);
     }
 }
