@@ -22,7 +22,7 @@ public class FestivalDetailResponse {
     private String etc;//비고TEXT
     private String author;//작성자
     private Long likes;
-    private Integer review;
+    private Long review;
 
     public static FestivalDetailResponse of(Festival festival) {
         return FestivalDetailResponse.builder().
@@ -38,7 +38,7 @@ public class FestivalDetailResponse {
                 startDate(festival.getStartDate()).
                 homepAddr(festival.getHomepAddr()).
                 streetAddr(festival.getStreetAddr()).
-                review(festival.getReviews().size()).
+                review(festival.getReview()).
                 author(festival.getAuthor()).
                 build();
     }

@@ -13,5 +13,6 @@ import java.util.Optional;
 public interface FestivalRepository extends JpaRepository<Festival,Integer>{
     Page<Festival> findAllByFestivalNameContaining(String keyWord, Pageable pageable);
     Page<Festival> findAllByLikesGreaterThan(Long zero,Pageable pageable);
+    Page<Festival> findAllByReviewGreaterThan(Long zero,Pageable pageable);
     Optional<Festival> findByFestivalName(String festivalName);
 }

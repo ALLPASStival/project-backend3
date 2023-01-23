@@ -107,12 +107,22 @@ public class FestivalApiController {
         return Response.success(list);
     }
 
-    // 축제 순위
-    @GetMapping("/ranks")
-    public Response<Page<FestivalDetailResponse>> festivalRank(@PageableDefault(size = 4, sort ="likes",
+    // 축제 좋아요 순위
+    @GetMapping("/ranks/likes")
+    public Response<Page<FestivalDetailResponse>> festivalRankByLike(@PageableDefault(size = 4, sort ="likes",
             direction = Sort.Direction.DESC)Pageable pageable){
-        Page<FestivalDetailResponse> list = festivalService.festivalRank(pageable);
+        Page<FestivalDetailResponse> list = festivalService.festivalRankByLikes(pageable);
         return Response.success(list);
     }
+
+    // 축제 리뷰 순위
+    @GetMapping("/ranks/reviews")
+    public Response<Page<FestivalDetailResponse>> festivalRankByReview(@PageableDefault(size = 4, sort ="review",
+            direction = Sort.Direction.DESC)Pageable pageable){
+        Page<FestivalDetailResponse> list = festivalService.festivalRankByReview(pageable);
+        return Response.success(list);
+    }
+
+
 
 }

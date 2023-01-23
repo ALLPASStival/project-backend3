@@ -6,6 +6,7 @@ import com.itstime.allpasstival.domain.entity.Post;
 import com.itstime.allpasstival.domain.entity.User;
 import com.itstime.allpasstival.enums.PostCategory;
 import com.itstime.allpasstival.enums.ResponseState;
+import com.itstime.allpasstival.repository.FestivalRepository;
 import com.itstime.allpasstival.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 public class PostService {
     private final PostRepository postRepository;
     private final ValidateService validateService;
+    private final FestivalRepository festivalRepository;
     private final LikedPostService likedPostService;
 
     //게시글 단건조회
@@ -53,7 +55,17 @@ public class PostService {
     //게시글 등록
     public PostEnrollResponse enrollPost(PostEnrollRequest request, String category, String userId){
         User user = validateService.validateUser(userId);
-        Festival festival = category.equals("free")||category.equals("service") ? null : validateService.validateFestival(request.getFestivalName());
+        Festival festival;
+        if(category.equals("free")||category.equals("service")){
+            festival=null;
+        }
+        else {
+            festival=validateService.validateFestival(request.getFestivalName());
+            if(category.equals("review")){
+                festival.changeReview(festival.getReview()+1);
+                festivalRepository.save(festival);
+            }
+        }
         PostCategory postCategory =  validateService.validatePostCategory(category);
         ResponseState responseState = postCategory.equals(PostCategory.service)? ResponseState.onGoing : null;
         Post savedPost = postRepository.save(request.toEntity(user,festival,postCategory,responseState));
@@ -73,6 +85,9 @@ public class PostService {
     public PostDeleteResponse deletePost(Integer id, String userId){
         User user = validateService.validateUser(userId);
         Post post = validateService.validatePost(id);
+        if(post.getCategory().equals(PostCategory.review)){
+            post.getFestival().changeReview(post.getFestival().getReview()-1);
+        }
         validateService.validatePermission(post.getUser(),user);
         postRepository.deleteById(id);
         return PostDeleteResponse.of(post);

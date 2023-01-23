@@ -36,7 +36,8 @@ public class Festival extends BaseEntity{
     private String author;
     private String latitude; //위도
     private String longitude; //경도
-    private Long likes=Long.parseLong("0"); //좋아요수
+    private Long likes = Long.parseLong("0"); //좋아요수
+    private Long review = Long.parseLong("0"); //리뷰 수
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<ReservedFestival> reservedFestivals = new ArrayList<>();
@@ -52,6 +53,9 @@ public class Festival extends BaseEntity{
 
     public void changeLike(Long likes){
         this.likes=likes;
+    }
+    public void changeReview(Long review){
+        this.review = review;
     }
 
     public static Festival of(ReservedFestival reservedFestival) {
